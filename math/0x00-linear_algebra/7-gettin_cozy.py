@@ -8,7 +8,7 @@ def cat_matrices2D(mat1, mat2, axis=0):
         new_mat = list(map(lambda v: v[:], mat1[:])) + list(map(lambda v: v[:],
                                                                 mat2[:]))
         return new_mat
-    elif axis == 1 and len(mat1[0]) == len(mat2):
+    elif axis == 1 and len(mat1) == len(mat2):
         i = 0
         new_mat = []
         i = 0
