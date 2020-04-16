@@ -11,4 +11,5 @@ def np_slice(matrix, axes={}):
             new_array = matrix[array_slice]
         elif key == 1:
             new_array = matrix.T[array_slice]
+            new_array = new_array.T
     return new_array
