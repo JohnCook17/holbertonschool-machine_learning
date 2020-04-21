@@ -11,7 +11,8 @@ Farrah = fruit[0:][0:1]
 Fred = fruit[0:][1:2]
 Felicia = fruit[0:][2:3]
 people = "Farrah", "Fred", "Felicia"
-my_dict = {key: value[0:] for key, value in zip([v[0:] for v in fruits], [v[0:] for v in fruit])}
+my_dict = {key: value[0:] for key, value in zip([v[0:] for v in fruits],
+                                                [v[0:] for v in fruit])}
 i = 0
 for person in people:
     fruit_to_add = 0
@@ -24,7 +25,8 @@ for person in people:
             color = "#ff8000"
         elif key == "peaches":
             color = "#ffe5b4"
-        plt.bar(person, my_dict.get(key)[i], color=color, bottom=fruit_to_add, width=0.5)
+        plt.bar(person, my_dict.get(key)[i], color=color, bottom=fruit_to_add,
+                width=0.5)
         fruit_to_add += my_dict.get(key)[i]
     i += 1
 plt.legend(fruits)
