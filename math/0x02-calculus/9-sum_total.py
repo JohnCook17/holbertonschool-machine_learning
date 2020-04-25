@@ -5,9 +5,11 @@
 def summation_i_squared(n):
     """uses math to sum the squares"""
     try:
-        answer = ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
-        if answer % 1 == 0:
-            answer = int(answer)
-        return answer
+        if isinstance(n, int):
+            if n < 0:
+                return None
+            if n >= 0:
+                answer = ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
+                return int(answer)
     except ValueError:
         return None
