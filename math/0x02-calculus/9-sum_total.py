@@ -8,6 +8,8 @@ def summation_i_squared(n):
         if isinstance(n, int):
             if n <= 0:
                 return None
+            if n == 1:
+                return 1
             if n > 0:
                 answer = ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
                 return int(answer)
