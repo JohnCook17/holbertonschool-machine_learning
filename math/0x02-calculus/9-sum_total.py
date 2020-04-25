@@ -9,4 +9,5 @@ def summation_i_squared(n):
         if answer % 1 == 0:
             answer = int(answer)
         return answer
-    return None
+    else:
+        return None
