@@ -6,7 +6,7 @@ def poly_derivative(poly):
     """Finds a derivative of an equation"""
     try:
         answer = [poly[i] * i for i in range(1, len(poly))]
-        if answer == 0:
+        if answer == 0 or answer == []:
             return [0]
         else:
             return answer
