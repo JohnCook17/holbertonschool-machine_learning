@@ -4,7 +4,7 @@
 
 def poly_derivative(poly):
     """Finds a derivative of an equation"""
-    if [n for n in poly if type(n) is int or type(n) is float]:
+    if [n for n in poly if type(n) == int or type(n) == float]:
         answer = [poly[i] * i for i in range(1, len(poly))]
         if answer == 0:
             return [0]
