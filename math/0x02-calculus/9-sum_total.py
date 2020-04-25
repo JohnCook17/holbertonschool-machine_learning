@@ -4,7 +4,7 @@
 
 def summation_i_squared(n):
     """uses math to sum the squares"""
-    if isinstance(n, int) or isinstance(n, float):
+    if isinstance(n, int):
         answer = ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
         if answer % 1 == 0:
             answer = int(answer)
