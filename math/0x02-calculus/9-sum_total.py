@@ -4,6 +4,9 @@
 
 def summation_i_squared(n):
     """uses math to sum the squares"""
-    if type(n) is int or type(n) is float:
-        return ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
+    if type(n) == int or type(n) == float:
+        answer = ((n ** 3) / 3) + ((n ** 2) / 2) + (n / 6)
+        if answer % 1 == 0:
+            answer = int(answer)
+        return answer
     return None
