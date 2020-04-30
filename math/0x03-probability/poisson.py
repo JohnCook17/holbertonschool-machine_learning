@@ -32,6 +32,8 @@ class Poisson:
         """The probability mass function of Poisson"""
         if not isinstance(k, int):
             k = int(k)
+        if k < 0:
+            return 0
         e = 2.7182818285
 
         fact = 1
