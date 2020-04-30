@@ -47,6 +47,8 @@ class Poisson:
         """The Cumulative distribution function of poisson"""
         if k % 1 != 0:
             k = int(k)
+        if k < 0:
+            return 0
         e = 2.7182818285
         mean = self.lambtha
         k_sum = 0
