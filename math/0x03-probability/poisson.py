@@ -30,7 +30,7 @@ class Poisson:
 
     def pmf(self, k):
         """The probability mass function of Poisson"""
-        if k % 1 != 0:
+        if not isinstance(k, int):
             k = int(k)
         e = 2.7182818285
 
