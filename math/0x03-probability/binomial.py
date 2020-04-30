@@ -39,6 +39,8 @@ class Binomial():
         """The PMF of a binomial distribution"""
         if k % 1 != 0:
             k = int(k)
+        if k < 0 and k <= self.n:
+            return 0
         q = 1 - self.p
         co = (self.factorial(self.n) / ((self.factorial(self.n-k)
                                          * self.factorial(k))))
