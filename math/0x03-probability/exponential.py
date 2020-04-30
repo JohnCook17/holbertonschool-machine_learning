@@ -20,11 +20,11 @@ class Exponential:
 
     def pdf(self, x):
         """The probability density function"""
-        if x < 1:
-            return 0
-        else:
+        if x >= 0:
             e = 2.7182818285
             return (self.lambtha * (e ** (-self.lambtha ** x)))
+        else:
+            return 0
 
     def cdf(self, x):
         """The cumulative distribution function"""
