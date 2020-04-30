@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exponential Distribution"""
+"""Exponential Distribution function"""
 
 
 class Exponential:
@@ -24,7 +24,7 @@ class Exponential:
             return 0
         else:
             e = 2.7182818285
-            return (self.lambtha * (e ** -(self.lambtha ** x)))
+            return (self.lambtha * (e ** -(self.lambtha * x)))
 
     def cdf(self, x):
         """The cumulative distribution function"""
