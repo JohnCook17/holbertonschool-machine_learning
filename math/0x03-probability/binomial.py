@@ -46,3 +46,11 @@ class Binomial():
                                          * self.factorial(k))))
         q2 = q ** (self.n - k)
         return co * (self.p ** k) * q2
+
+    def cdf(self, k):
+        """cdf for binomial"""
+        if k % 1 != 0:
+            k = int(k)
+        if k < 0 and k <= self.n:
+            return 0
+        return sum([self.pmf(i) for i in range(0, k + 1)])
