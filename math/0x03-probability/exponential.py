@@ -20,7 +20,7 @@ class Exponential:
 
     def pdf(self, x):
         """The probability density function"""
-        if x < 0:
+        if x < 1:
             return 0
         else:
             e = 2.7182818285
