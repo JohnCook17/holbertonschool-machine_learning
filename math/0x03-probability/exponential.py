@@ -19,8 +19,8 @@ class Exponential:
             self.lambtha = (1 / sum(data)) * len(data)
 
     def pdf(self, x):
-        """The probability density function"""
-        if x < 0:
+        """The probability density function for exponential distribution"""
+        if x <= 0:
             return 0
         else:
             e = 2.7182818285
