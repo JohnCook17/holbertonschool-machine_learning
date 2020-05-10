@@ -14,7 +14,9 @@ class DeepNeuralNetwork:
             raise TypeError("layers must be a list of positive integers")
         tmp_weights = {}
         for value in range(0, len(layers)):
-            if not isinstance(layers[value], int) and layers[value] < 1:
+            if not isinstance(layers[value], int):
+                raise TypeError("layers must be a list of positive integers")
+            if layers[value] < 1:
                 raise TypeError("layers must be a list of positive integers")
             if value == 0:
                 Wkey = "W" + str(value + 1)
