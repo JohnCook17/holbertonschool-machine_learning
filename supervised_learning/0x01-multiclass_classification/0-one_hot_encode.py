@@ -5,6 +5,10 @@ import numpy as np
 
 def one_hot_encode(Y, classes):
     """One hot encodes using np"""
+    if Y.size == 0:
+        return None
+    if classes < 1:
+        return None
     try:
         one_hot = []
         for value in Y:
