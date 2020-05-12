@@ -8,7 +8,7 @@ def one_hot_encode(Y, classes):
     try:
         one_hot = []
         for value in Y:
-            number = [0 for _ in range(classes)]
+            number = [0 for n in range(classes) if isinstance(n, int)]
             number[value] = 1
             one_hot.append(number)
         return np.array(one_hot, dtype=float).T
