@@ -9,12 +9,9 @@ def one_hot_encode(Y, classes):
         return None
     if classes < 1:
         return None
-    try:
-        one_hot = []
-        for value in Y:
-            number = [0 for n in range(classes) if isinstance(n, int)]
-            number[value] = 1
-            one_hot.append(number)
-        return np.array(one_hot, dtype=float).T
-    except (ValueError(), IndexError()):
-        return None
+    one_hot = []
+    for value in Y:
+        number = [0 for n in range(classes) if isinstance(n, int)]
+        number[value] = 1
+        one_hot.append(number)
+    return np.array(one_hot, dtype=float).T
