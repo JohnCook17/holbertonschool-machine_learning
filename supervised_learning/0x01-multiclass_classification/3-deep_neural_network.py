@@ -75,7 +75,7 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """The evaluation of the deep neural network"""
-        return (np.argmax(self.forward_prox(X)[0]),
+        return (np.argmax(self.forward_prop(X)[0]),
                 self.cost(Y, self.forward_prop(X)[0]))
 
     def gradient_descent(self, Y, cache, alpha=0.05):
