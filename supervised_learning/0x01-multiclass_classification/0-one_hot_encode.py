@@ -11,6 +11,6 @@ def one_hot_encode(Y, classes):
             number = [0 for _ in range(classes)]
             number[value] = 1
             one_hot.append(number)
-        return np.array(one_hot).T
+        return np.array(one_hot, dtype=float).T
     except (ValueError(), IndexError()):
         return None
