@@ -5,9 +5,9 @@ import numpy as np
 
 def one_hot_decode(one_hot):
     """Uses argmax to decode one hot"""
-    if one_hot.size == 0:
+    if not isinstance(one_hot, np.ndarray):
         return None
-    if np.any(one_hot) is None:
+    if not one_hot.ndim == 2:
         return None
     decode = []
     for i in range(0, len(one_hot)):
