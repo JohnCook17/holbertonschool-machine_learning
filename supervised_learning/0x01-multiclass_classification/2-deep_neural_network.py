@@ -151,6 +151,8 @@ class DeepNeuralNetwork:
     @staticmethod
     def load(filename):
         """Loads a pickle of the deep neural network"""
+        if not filename:
+            return None
         if not isinstance(filename, str):
             return None
         if filename[-4:] != ".pkl":
