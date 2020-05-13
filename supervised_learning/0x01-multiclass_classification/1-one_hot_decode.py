@@ -7,9 +7,9 @@ def one_hot_decode(one_hot):
     """Uses argmax to decode one hot"""
     if one_hot.size == 0:
         return None
-    try:
-        return (np.array([np.argmax(one_hot.T[i])
-                          for i in range(0, len(one_hot))
-                          if isinstance(i, int)]))
-    except (ValueError(), IndexError()):
+    if np.any(one_hot) is None:
         return None
+    decode = []
+    for i in range(0, len(one_hot)):
+        decode.append(np.argmax(one_hot.T[i]))
+    return np.array(decode)
