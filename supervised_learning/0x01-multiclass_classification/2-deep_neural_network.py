@@ -151,8 +151,9 @@ class DeepNeuralNetwork:
     @staticmethod
     def load(filename):
         """Loads a pickle of the deep neural network"""
-        try:
-            with open(filename, "rb") as myfile:
-                return pickle.load(myfile)
-        except pickle.UnpicklingError:
+        if not isinstance(filename, str):
             return None
+        if filename[-4:] != ".pkl":
+            return None
+        with open(filename, "rb") as myfile:
+            return pickle.load(myfile)
