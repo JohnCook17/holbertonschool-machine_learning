@@ -26,7 +26,7 @@ if __name__ == '__main__':
     layer_sizes = [256, 256, 10]
     activations = [tf.nn.tanh, tf.nn.tanh, None]
     alpha = 0.01
-    iterations = 100
+    iterations = 1000
 
     tf.set_random_seed(0)
     save_path = train(X_train, Y_train_oh, X_valid, Y_valid_oh, layer_sizes,
