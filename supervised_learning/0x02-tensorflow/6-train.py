@@ -33,12 +33,6 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
         saver = tf.train.Saver()
         init = tf.global_variables_initializer()
         sess.run(init)
-        tf.add_to_collection("x", x)
-        tf.add_to_collection("y", y)
-        tf.add_to_collection("y_pred", y_pred)
-        tf.add_to_collection("accuracy", accuracy)
-        tf.add_to_collection("loss", loss)
-        tf.add_to_collection("train_op", train_op)
         while iteration <= iterations:
             if iteration == 0 or iteration % 100 == 0 or (iteration ==
                                                           iterations):
@@ -59,5 +53,11 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
             sess.run(y_pred, feed_dict={x: X_valid, y: Y_valid})
             sess.run(train_op, feed_dict={x: X_train, y: Y_train})
             iteration += 1
+        tf.add_to_collection("x", x)
+        tf.add_to_collection("y", y)
+        tf.add_to_collection("y_pred", y_pred)
+        tf.add_to_collection("accuracy", accuracy)
+        tf.add_to_collection("loss", loss)
+        tf.add_to_collection("train_op", train_op)
         save = saver.save(sess, save_path)
         return save_path
