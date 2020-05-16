@@ -10,8 +10,8 @@ def evaluate(X, Y, save_path):
         new_saver.restore(sess, tf.train.latest_checkpoint("./"))
         # op = sess.graph.get_operations()
         # [print(m.values()) for m in op][1]
-        x = tf.get_collection("x_placeholder")[0]
-        y = tf.get_collection("y_placeholder")[0]
+        x = tf.get_collection("x")[0]
+        y = tf.get_collection("y")[0]
         feed_dict = {x: X, y: Y}
         y_pred = tf.get_collection("y_pred")[0]
         accuracy = tf.get_collection("accuracy")[0]
