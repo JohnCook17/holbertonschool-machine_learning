@@ -21,7 +21,10 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
         train_op = tf.get_collection("train_op")[0]
         epoch = 0
         while epoch <= epochs:
-            xt, yt = shuffle_data(X_train, Y_train)
+            if epoch == 0:
+                xt, yt = X_train, Y_train
+            else:
+                xt, yt = shuffle_data(X_train, Y_train)
             xv, yv = X_valid, Y_valid
             feed_dict_t = {x: xt, y: yt}
             feed_dict_v = {x: xv, y: yv}
