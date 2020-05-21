@@ -5,9 +5,10 @@ import numpy as np
 
 def moving_average(data, beta):
     """"""
-    prev = data[0]
-    ewma = []
-    for i in range((len(data))):
-        ewma.append(((1 - beta) * prev) + (beta * data[i]))
-        prev = data[i]
+    ewma = [data[0]]
+    for i in range(1, (len(data))):
+        bt = (1 - beta ** i)
+        vt = data[i] / bt
+        print(vt)
+        ewma.append((beta * ewma[i - 1]) + ((1 - beta) * vt))
     return ewma
