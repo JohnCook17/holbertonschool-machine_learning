@@ -30,9 +30,11 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             feed_dict_v = {x: xv, y: yv}
             print("After {} epochs:".format(epoch))
             print("\tTraining Cost: {}".format(sess.run(loss, feed_dict_t)))
-            print("\tTraining Accuracy: {}".format(sess.run(accuracy, feed_dict_t)))
+            print("\tTraining Accuracy: {}".format(sess.run(accuracy,
+                                                            feed_dict_t)))
             print("\tValidation Cost: {}".format(sess.run(loss, feed_dict_v)))
-            print("\tValidation Accuracy: {}".format(sess.run(accuracy, feed_dict_v)))
+            print("\tValidation Accuracy: {}".format(sess.run(accuracy,
+                                                              feed_dict_v)))
             if epoch == epochs:
                 break
             step = 0
@@ -49,7 +51,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                 if step % 100 == 0 and step >= 100:
                     print("\tStep {}:".format(step))
                     print("\t\tCost: {}".format(sess.run(loss, current_batch)))
-                    print("\t\tAccuracy: {}".format(sess.run(accuracy, current_batch)))
+                    print("\t\tAccuracy: {}".format(sess.run(accuracy,
+                                                             current_batch)))
                 sess.run(train_op, current_batch)
                 step += 1
                 batch_start = batch_stop
