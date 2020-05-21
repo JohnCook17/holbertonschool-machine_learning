@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shuffles data"""
+"""Shuffles data using np.random.permutation"""
 import numpy as np
 
 
