@@ -8,9 +8,9 @@ def create_batch_norm_layer(prev, n, activation):
     and activation is the activation"""
     i = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
     layer = tf.layers.Dense(units=n, activation=None, kernel_initializer=i)
-    beta = tf.Variable(tf.zeros([n]), trainable=True)
-    gamma = tf.Variable(tf.ones([n]), trainable=True)
     mean, variance = tf.nn.moments(layer(prev), axes=[0])
+    beta = tf.Variable(tf.zeros([n]), trainable=True)
+    gamma = tf.Variable(tf.ones([n]), trainable=True) 
     norm = tf.nn.batch_normalization(layer(prev), mean=mean, variance=variance,
                                      offset=beta, scale=gamma,
                                      variance_epsilon=1e-8)
