@@ -37,7 +37,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                                                               feed_dict_v)))
             if epoch == epochs:
                 break
-            step = 0
+            step = 1
             batch_start = 0
             batch_stop = batch_size
             while batch_start <= m:
