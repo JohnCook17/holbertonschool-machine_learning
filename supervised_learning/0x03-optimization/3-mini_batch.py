@@ -35,6 +35,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print("\tValidation Cost: {}".format(sess.run(loss, feed_dict_v)))
             print("\tValidation Accuracy: {}".format(sess.run(accuracy,
                                                               feed_dict_v)))
+            if epoch == 0:
+                xt, yt = shuffle_data(X_train, Y_train)
             if epoch == epochs:
                 break
             step = 1
@@ -48,6 +50,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                 # print(len(current_batch_y))
                 # print(batch_start)
                 # print(batch_stop)
+                # print(step)
                 if step % 100 == 0 and step >= 100:
                     print("\tStep {}:".format(step))
                     print("\t\tCost: {}".format(sess.run(loss, current_batch)))
