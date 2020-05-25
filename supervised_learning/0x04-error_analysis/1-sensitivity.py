@@ -4,7 +4,7 @@ import numpy as np
 
 
 def sensitivity(confusion):
-    """"""
+    """Takes the confusion matrix and calculates the sensitivity"""
     true_positives = np.diag(confusion)
     false_negatives = np.sum(confusion, axis=1) - true_positives
     sen = true_positives / (true_positives + false_negatives)

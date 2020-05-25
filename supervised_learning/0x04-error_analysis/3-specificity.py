@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Fids the specificity of a confusion matrix"""
 import numpy as np
 
 
 def specificity(confusion):
-    """"""
+    """finds the true negatives, and calculates the specificity
+    using true positives and false positives"""
     classes = confusion.shape[0]
     true_negative = []
     for i in range(classes):
