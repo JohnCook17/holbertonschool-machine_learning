@@ -8,4 +8,6 @@ precision = __import__('2-precision').precision
 
 def f1_score(confusion):
     """Finds the f1 score, or harmonic mean of precision and sensitivity"""
-    return 2 * (precission * sensitivity) / (precission + sensitivity)
+    pre = precision(confusion)
+    sen = sensitivity(confusion)
+    return np.asarray(2 * (pre * sen) / (pre + sen))
