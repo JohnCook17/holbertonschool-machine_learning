@@ -2,12 +2,10 @@
 """F1 score of a confusion matrix"""
 import numpy as np
 
+sensitivity = __import__('1-sensitivity').sensitivity
+precision = __import__('2-precision').precision
+
 
 def f1_score(confusion):
-    """Finds the f1 score, or harmonic mean of precision and recall"""
-    true_positives = np.diag(confusion)
-    false_negatives = np.sum(confusion, axis=1) - true_positives
-    recall = true_positives / (true_positives + false_negatives)
-    false_positives = np.sum(confusion, axis=0) - true_positives
-    precission = true_positives / (true_positives + false_positives)
-    return 2 * (precission * recall) / (precission + recall)
+    """Finds the f1 score, or harmonic mean of precision and sensitivity"""
+    return 2 * (precission * sensitivity) / (precission + sensitivity)
