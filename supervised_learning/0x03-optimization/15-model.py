@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""Mini batch gradient descent with Adam and learning rate decay."""
 import tensorflow as tf
 import numpy as np
 
@@ -41,11 +41,11 @@ def create_layer(prev, n, activation):
     uses he et al"""
     i = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
     if activation:
-        layer = tf.layers.Dense(units=n, activation=None, kernel_initializer=i, name="layer")
+        layer = tf.layers.Dense(units=n, activation=None, kernel_initializer=i)
         layer = layer(prev)
         return activation(layer)
     else:
-        layer = tf.layers.Dense(units=n, activation=None, kernel_initializer=i, name="layer")
+        layer = tf.layers.Dense(units=n, activation=None, kernel_initializer=i)
         layer = layer(prev)
         return layer
 
@@ -105,7 +105,8 @@ def model(Data_train, Data_valid, layers, activations,
           save_path='/tmp/model.ckpt'):
     """"""
     with tf.Session() as sess:
-        x, y = create_placeholders(Data_train[0].shape[1], Data_train[1].shape[1])
+        x, y = create_placeholders(Data_train[0].shape[1],
+                                   Data_train[1].shape[1])
         y_pred = forward_prop(x, layers, activations)
         epoch = 0
         accuracy = calculate_accuracy(y, y_pred)
@@ -124,9 +125,11 @@ def model(Data_train, Data_valid, layers, activations,
             m = xt.shape[0]
             print("After {} epochs:".format(epoch))
             print("\tTraining Cost: {}".format(sess.run(loss, feed_dict_t)))
-            print("\tTraining Accuracy: {}".format(sess.run(accuracy, feed_dict_t)))
+            print("\tTraining Accuracy: {}".format(sess.run(accuracy,
+                                                            feed_dict_t)))
             print("\tValidation Cost: {}".format(sess.run(loss, feed_dict_v)))
-            print("\tValidation Accuracy: {}".format(sess.run(accuracy, feed_dict_v)))
+            print("\tValidation Accuracy: {}".format(sess.run(accuracy,
+                                                              feed_dict_v)))
             global_step += step - 1
             step = 1
             if epoch != 0:
@@ -146,7 +149,8 @@ def model(Data_train, Data_valid, layers, activations,
                 if step % 100 == 0:
                     print("\tStep {}:".format(step))
                     print("\t\tCost: {}".format(sess.run(loss, feed_dict_b)))
-                    print("\t\tAccuracy: {}".format(sess.run(accuracy, feed_dict_b)))
+                    print("\t\tAccuracy: {}".format(sess.run(accuracy,
+                                                             feed_dict_b)))
                 # forward prop and train op
                 sess.run(y_pred, feed_dict_b)
                 sess.run(train_op, feed_dict_b)
