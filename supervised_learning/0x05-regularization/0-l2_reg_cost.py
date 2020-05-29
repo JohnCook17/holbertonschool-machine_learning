@@ -11,4 +11,4 @@ def l2_reg_cost(cost, lambtha, weights, L, m):
         weight = np.linalg.norm(weight, ord="fro")
         new_weights.append(weight)
     new_weights = np.asarray(new_weights)
-    return np.sum(cost, keepdims=True) + ((lambtha / (2 * m)) * np.sum(new_weights, keepdims=True) ** 2) / m
+    return np.sum(cost, keepdims=True) + ((lambtha / (2 * m)) * np.sum(new_weights, keepdims=True))
