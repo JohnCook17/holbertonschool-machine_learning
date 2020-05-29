@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""Gradient descent with drop out"""
 import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
-    """"""
+    """Drop out uses the cached drop out mask to calculate gradeint descent"""
     m = Y.shape[1]
     new_weights = weights
     for layer in range(L, 0, -1):
