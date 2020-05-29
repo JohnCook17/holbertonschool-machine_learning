@@ -16,9 +16,9 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
         else:
             # other layers are tanh
             dz = da * (1 - cache["A" + str(layer)] ** 2)
-        l2_w = (lambtha / (2 * m)) * new_weights["W" + str(layer)]
-        dw = np.matmul(dz, cache["A" + str(layer - 1)].T) / m + l2_w
-        db = np.sum(dz, axis=1, keepdims=True) / m
+        l2_w = (lambtha / m) * new_weights["W" + str(layer)]
+        dw = np.matmul(dz, cache["A" + str(layer - 1)].T) + l2_w
+        db = np.sum(dz, axis=1, keepdims=True)
         da = np.matmul(new_weights["W" + str(layer)].T, dz)
         # set new weights
         new_weights["W" + str(layer)] = (new_weights["W" + str(layer)] -
