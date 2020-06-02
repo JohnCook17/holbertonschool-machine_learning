@@ -22,7 +22,7 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
                                      kernel_regularizer=K.
                                      regularizers.l2(lambtha)))
         if activation != "softmax":
-            model.add(K.layers.Dropout(rate=keep_prob,
+            model.add(K.layers.Dropout(rate=(1 - keep_prob),
                                        noise_shape=(layer,), input_shape=(nx,)
                                        ))
     return model
