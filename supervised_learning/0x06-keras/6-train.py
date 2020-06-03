@@ -12,7 +12,7 @@ def train_model(network, data, labels, batch_size, epochs,
     the data or not, now uses validation data as well. now with early stopping
     """
     if validation_data is not None:
-        if early_stopping:
+        if early_stopping and patience < epochs:
             my_callbacks = [K.callbacks.EarlyStopping(monitor="val_loss",
                                                       patience=patience)]
             return network.fit(x=data, y=labels,
