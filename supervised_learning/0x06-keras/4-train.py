@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Uses .fit to train the network"""
+import tensorflow.keras as K
 
 
 def train_model(network, data, labels, batch_size, epochs, verbose=True,

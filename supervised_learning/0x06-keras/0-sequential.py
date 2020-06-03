@@ -9,20 +9,23 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
     lambtha is the l2 regularization. keep_prob is the probability to keep
     a neuron."""
     model = K.Sequential()
-    first_layer = 1
-    for layer, activation in zip(layers, activations):
-        if first_layer:
-            model.add(K.layers.Dense(units=layer, activation=activation,
+    for i in range(0, len(layers)):
+        if i == 0:
+            model.add(K.layers.Dense(units=layers[i],
+                                     activation=activations[i],
                                      kernel_regularizer=K.
                                      regularizers.l2(lambtha),
                                      input_shape=(nx,)))
-            first_layer = 0
         else:
-            model.add(K.layers.Dense(units=layer, activation=activation,
+            model.add(K.layers.Dense(units=layers[i],
+                                     activation=activations[i],
                                      kernel_regularizer=K.
                                      regularizers.l2(lambtha)))
-        if activation != "softmax":
+        if i == len(layers) - 1:
+            break
+        else:
             model.add(K.layers.Dropout(rate=(1 - keep_prob),
-                                       noise_shape=(layer,), input_shape=(nx,)
+                                       noise_shape=(layers[i],),
+                                       input_shape=(nx,)
                                        ))
     return model
