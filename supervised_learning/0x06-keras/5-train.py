@@ -9,6 +9,11 @@ def train_model(network, data, labels, batch_size, epochs,
     labels, batch size is the size of the minibatch, epochs is the number of
     epochs to run, verbose is print of not the progress, shuffle is to shuffle
     the data or not, now uses validation data as well"""
-    return network.fit(x=data, y=labels, validation_data=validation_data,
-                       epochs=epochs, batch_size=batch_size,
-                       verbose=verbose, shuffle=shuffle)
+    if validation_data:
+        return network.fit(x=data, y=labels, validation_data=validation_data,
+                           epochs=epochs, batch_size=batch_size,
+                           verbose=verbose, shuffle=shuffle)
+    else:
+        return network.fit(x=data, y=labels, epochs=epochs,
+                           batch_size=batch_size,
+                           verbose=verbose, shuffle=shuffle)
