@@ -10,10 +10,11 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
     dropout rate"""
     inputs = K.Input(shape=(nx,))
     x = inputs
-    for layer, activation in zip(layers, activations):
-        x = K.layers.Dense(units=layer, activation=activation,
+    for i in range(0, len(layers)):
+        x = K.layers.Dense(units=layers[i], activation=activations[i],
                            kernel_regularizer=K.regularizers.l2(lambtha))(x)
-        if activation != "softmax":
-            x = K.layers.Dropout(rate=(1 - keep_prob), noise_shape=(layer,))(x)
+        if i != len(layers) - 1:
+            x = K.layers.Dropout(rate=(1 - keep_prob), noise_shape=(layers[i],)
+                                 )(x)
     outputs = x
     return K.Model(inputs=inputs, outputs=outputs)
