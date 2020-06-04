@@ -12,13 +12,13 @@ def train_model(network, data, labels, batch_size, epochs,
     epochs to run, verbose is print of not the progress, shuffle is to shuffle
     the data or not, now uses validation data as well. now with early stopping
     """
-    def scheduler(epoch, alpha=alpha, decay_rate=decay_rate):
+    def scheduler(epoch):
         """schedules the decay rate"""
-        return alpha / (1 + decay_rate * (epoch // 1))
-
+        return (alpha / (1 + decay_rate * epoch))
     if validation_data is not None:
         if early_stopping and learning_rate_decay:
-            decay = K.callbacks.LearningRateScheduler(scheduler, verbose=1)
+            decay = K.callbacks.LearningRateScheduler(scheduler, verbose=1,
+                                                      mode="min")
             my_callbacks = [K.callbacks.EarlyStopping(monitor="val_loss",
                                                       patience=patience),
                             decay]
@@ -28,7 +28,8 @@ def train_model(network, data, labels, batch_size, epochs,
                                verbose=verbose, shuffle=shuffle,
                                callbacks=my_callbacks)
         elif learning_rate_decay and not early_stopping:
-            decay = K.callbacks.LearningRateScheduler(scheduler, verbose=1)
+            decay = K.callbacks.LearningRateScheduler(scheduler, verbose=1,
+                                                      mode="min")
             my_callbacks = [decay]
             return network.fit(x=data, y=labels,
                                validation_data=validation_data,
