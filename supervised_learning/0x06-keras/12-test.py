@@ -7,5 +7,5 @@ def test_model(network, data, labels, verbose=True):
     """Test a model in keras, network is the network to test
     data is the input data, labels are the correct labels of the
     data, verbose is whether to print or not"""
-    history = network.fit(x=data, y=labels, verbose=verbose)
-    return history.history["loss"], history.history["acc"]
+    evaluation = network.evaluate(x=data, y=labels, verbose=verbose)
+    return evaluation
