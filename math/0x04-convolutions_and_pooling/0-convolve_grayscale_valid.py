@@ -13,16 +13,22 @@ def convolve_grayscale_valid(images, kernel):
     d1 = kernel.shape[0] // 2
     d2 = kernel.shape[1] // 2
     i = images.shape[0]
-    new_array_w = (images.shape[1] - (2 * d1))
-    new_array_h = (images.shape[2] - (2 * d2))
-    new_array = np.empty((i, new_array_w, new_array_h))
-    for i_index in range(d1, new_array.shape[1]):
-        for j_index in range(d2, new_array.shape[2]):
-            i_start = i_index - d1
-            i_end = i_index + d1 + 1
-            j_start = j_index - d2
-            j_end = j_index + d2 + 1
+    i_start = 0
+    i_end = kernel.shape[0]
+    j_start = 0
+    j_end = kernel.shape[1]
+    new_array_h = (images.shape[1] - (2 * d1))
+    new_array_w = (images.shape[2] - (2 * d2))
+    new_array = np.empty((i, new_array_h, new_array_w))
+    for i_index in range(0, new_array.shape[1]):
+        for j_index in range(0, new_array.shape[2]):
             n = images[:, i_start: i_end, j_start: j_end]
             new_pixel = np.sum((n * kernel), axis=(1, 2))
             new_array[:, i_index, j_index] = new_pixel
+            j_start += 1
+            j_end += 1
+        j_start = 0
+        j_end = kernel.shape[1]
+        i_start += 1
+        i_end += 1
     return new_array
