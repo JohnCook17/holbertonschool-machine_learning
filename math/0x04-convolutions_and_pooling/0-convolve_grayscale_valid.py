@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-"""Does a valid convolution"""
+"""A valid convolution"""
 
 
 def convolve_grayscale_valid(images, kernel):
@@ -23,6 +23,6 @@ def convolve_grayscale_valid(images, kernel):
             j_start = j_index - d2
             j_end = j_index + d2 + 1
             n = images[:, i_start: i_end, j_start: j_end]
-            new_pixel = np.sum(n * kernel)
+            new_pixel = np.sum((n * kernel), axis=(1, 2))
             new_array[:, i_index, j_index] = new_pixel
     return new_array
