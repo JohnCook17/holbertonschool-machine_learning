@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 """
-A valid convolution, using numpy
+A valid con, using numpy
 """
 
 
