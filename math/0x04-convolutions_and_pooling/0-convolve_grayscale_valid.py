@@ -7,18 +7,14 @@ def convolve_grayscale_valid(images, kernel):
     """images is a np.ndarray with the shape of, the number of images,
     the height of the images, and the width of the images. kernel is
     the filter to apply to these images and is the shape of, kernel height
-    kernel width. d1 is how many pixels out from the center of the kernel in
-    dimension 1, d2 is how many pixels out from the center of the kernel in
-    dimension 2. i is the number of images."""
-    d1 = kernel.shape[0] // 2
-    d2 = kernel.shape[1] // 2
+    kernel width."""
     i = images.shape[0]
     i_start = 0
     i_end = kernel.shape[0]
     j_start = 0
     j_end = kernel.shape[1]
-    new_array_h = (images.shape[1] - (2 * d1))
-    new_array_w = (images.shape[2] - (2 * d2))
+    new_array_h = (images.shape[1] - kernel.shape[0] + 1)
+    new_array_w = (images.shape[2] - kernel.shape[1] + 1)
     new_array = np.empty((i, new_array_h, new_array_w))
     for i_index in range(0, new_array.shape[1]):
         for j_index in range(0, new_array.shape[2]):
