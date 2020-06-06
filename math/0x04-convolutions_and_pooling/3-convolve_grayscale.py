@@ -18,8 +18,8 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     j_start = 0
     j_end = kernel.shape[1]
     if padding == "same":
-        new_array_h = int(images.shape[1] / stride[0])
-        new_array_w = int(images.shape[2] / stride[1])
+        new_array_h = int(images.shape[1])
+        new_array_w = int(images.shape[2])
         new_array = np.empty((i, new_array_h, new_array_w))
         p1 = kernel.shape[0] // 2
         if p1 % 2 == 0:
