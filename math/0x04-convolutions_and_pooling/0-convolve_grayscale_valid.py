@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 import numpy as np
-"""A valid convolution, using numpy"""
+"""
+A valid convolution, using numpy
+"""
 
 
 def convolve_grayscale_valid(images, kernel):
-    """images is a array with the shape of, the number of images,
+    """
+    images is a array with the shape of, the number of images,
     the height of the images, and the width of the images. kernel is
     the filter to apply to these images and is the shape of, kernel height
-    kernel width."""
+    kernel width.
+    """
     i = images.shape[0]
     i_start = 0
     i_end = kernel.shape[0]
