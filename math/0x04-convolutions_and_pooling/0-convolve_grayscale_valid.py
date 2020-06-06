@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import numpy as np
 """
 A valid con, using numpy
 """
+import numpy as np
 
 
 def convolve_grayscale_valid(images, kernel):
