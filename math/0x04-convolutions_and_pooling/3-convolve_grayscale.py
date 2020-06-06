@@ -29,11 +29,11 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
             p2 = kernel.shape[1] // 2
         images = np.pad(array=images, pad_width=((0, 0), (p1, p1), (p2, p2)),
                         mode="constant", constant_values=0)
-    elif padding == "valid":
+    if padding == "valid":
         new_array_h = int((images.shape[1] - kernel.shape[0] + 1) / stride[0])
         new_array_w = int((images.shape[2] - kernel.shape[1] + 1) / stride[1])
         new_array = np.empty((i, new_array_h, new_array_w))
-    else:
+    if isinstance(padding, tuple):
         p1 = padding[0]
         p2 = padding[1]
         new_array_h = int((images.shape[1] + (2 * p1) - kernel.shape[0] + 1) /
