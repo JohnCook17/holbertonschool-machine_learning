@@ -12,8 +12,8 @@ def convolve_grayscale_same(images, kernel):
     the filter to apply to these images and is the shape of, kernel height
     kernel width.
     """
-    p1 = (kernel.shape[0] - 1) // 2
-    p2 = (kernel.shape[1] - 1) // 2
+    p1 = int((kernel.shape[0] - 1) / 2)
+    p2 = int((kernel.shape[1] - 1) / 2)
     i = images.shape[0]
     i_start = 0
     i_end = kernel.shape[0]
