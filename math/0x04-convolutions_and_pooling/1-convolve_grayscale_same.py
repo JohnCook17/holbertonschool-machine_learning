@@ -12,18 +12,20 @@ def convolve_grayscale_same(images, kernel):
     the filter to apply to these images and is the shape of, kernel height
     kernel width.
     """
-    p1 = int((kernel.shape[0] - 1) / 2)
-    p2 = int((kernel.shape[1] - 1) / 2)
     i = images.shape[0]
     i_start = 0
     i_end = kernel.shape[0]
     j_start = 0
     j_end = kernel.shape[1]
-    new_array_h = (images.shape[1] + 2 * p1 - kernel.shape[0] + 1)
-    new_array_w = (images.shape[2] + 2 * p2 - kernel.shape[1] + 1)
+    new_array_h = images.shape[1]
+    new_array_w = images.shape[2]
     new_array = np.empty((i, new_array_h, new_array_w))
-    images = np.pad(array=images, pad_width=((0, 0), (p1, p1), (p2, p2)),
-                    mode="constant", constant_values=0)
+    if images.shape[1] % kernel.shape[0] != 0 or (images.shape[2] %
+                                                  kernel.shape[1] != 0):
+        p1 = int((kernel.shape[0] - 1) / 2)
+        p2 = int((kernel.shape[1] - 1) / 2)
+        images = np.pad(array=images, pad_width=((0, 0), (p1, p1), (p2, p2)),
+                        mode="constant", constant_values=0)
     for i_index in range(0, new_array.shape[1]):
         for j_index in range(0, new_array.shape[2]):
             n = images[:, i_start: i_end, j_start: j_end]
