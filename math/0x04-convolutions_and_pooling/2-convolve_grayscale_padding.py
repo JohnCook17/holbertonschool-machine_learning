@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-placeholder for 2
+A custom padding con, using numpy
 """
 import numpy as np
 
@@ -12,15 +12,15 @@ def convolve_grayscale_padding(images, kernel, padding):
     the filter to apply to these images and is the shape of, kernel height
     kernel width.
     """
-    p1 = int((kernel.shape[0] - 1) / 2)
-    p2 = int((kernel.shape[1] - 1) / 2)
     i = images.shape[0]
     i_start = 0
     i_end = kernel.shape[0]
     j_start = 0
     j_end = kernel.shape[1]
-    new_array_h = (images.shape[1] + 2 * p1 - kernel.shape[0] + 1)
-    new_array_w = (images.shape[2] + 2 * p2 - kernel.shape[1] + 1)
+    p1 = padding[0]
+    p2 = padding[1]
+    new_array_h = (images.shape[1] + (2 * p1) - kernel.shape[0] + 1)
+    new_array_w = (images.shape[2] + (2 * p2) - kernel.shape[1] + 1)
     new_array = np.empty((i, new_array_h, new_array_w))
     images = np.pad(array=images, pad_width=((0, 0), (p1, p1), (p2, p2)),
                     mode="constant", constant_values=0)
