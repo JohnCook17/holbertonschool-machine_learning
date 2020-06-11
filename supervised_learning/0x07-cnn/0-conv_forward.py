@@ -25,13 +25,14 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     img_w_out = int((img_w + 2 * pw - ker_w) / stride[1]) + 1
     out_shape = img_n, img_h_out, img_w_out, img_c_out
     r = np.zeros(shape=out_shape)
-    np.pad(r, pad_width=(ph, pw), mode="constant", constant_values=0)
+    con = np.pad(A_prev, pad_width=((0, 0), (ph, ph,), (pw, pw), (0, 0)),
+                 mode="constant", constant_values=0)
 
     for h in range(0, img_h_out):
         for w in range(0, img_w_out):
             for channel in range(0, img_c_out):
-                n = A_prev[:, h * stride[0]: h * stride[0] + ker_h,
-                           w * stride[1]: w * stride[1] + ker_w, :]
+                n = con[:, h * stride[0]: h * stride[0] + ker_h,
+                        w * stride[1]: w * stride[1] + ker_w, :]
                 r[:, h, w, channel] = (np.sum((n * W[:, :, :, channel]),
                                               axis=(1, 2, 3)))
     return activation(r + b)
