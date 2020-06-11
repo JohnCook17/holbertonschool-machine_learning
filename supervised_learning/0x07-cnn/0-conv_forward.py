@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-""""""
+"""Forward prop of a convnet"""
 import numpy as np
 
 
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
-    """"""
+    """A_prev is the prev layer of the net, W is the kernels b is the bias
+    activation is the activation function, padding is which padding to use
+    and stride is how far to stride in height and width. Height comes first
+    """
     img_n = A_prev.shape[0]
     img_h = A_prev.shape[1]
     img_w = A_prev.shape[2]
-    img_c_in = W.shape[2]
     img_c_out = W.shape[3]
     ker_h = W.shape[0]
     ker_w = W.shape[1]
