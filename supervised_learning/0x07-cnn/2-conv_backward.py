@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-""""""
+"""back prop in a cnn"""
 import numpy as np
 
 
 def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
-    """"""
+    """dZ is the derivative of Z, A_prev is the previous layer, W is the kernel
+    b is the bias, padding can be a tuple, same or valid, stride is how far to
+    stride"""
     img_n = dZ.shape[0]
     img_h = A_prev.shape[1]
     img_w = A_prev.shape[2]
@@ -46,9 +48,9 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                     # print(i, h, w, c)
                     dA_slice = pad[i, h * stride[0]: h * stride[0] + ker_h,
                                    w * stride[1]: w * stride[1] + ker_w, :]
-                    Ap_s = A_prev_p[i, h * stride[0]: h * stride[0] + ker_h,
-                                    w * stride[1]: w * stride[1] + ker_w, :]
+                    Ap_s = A_prev[i, h * stride[0]: h * stride[0] + ker_h,
+                                  w * stride[1]: w * stride[1] + ker_w, :]
                     dA_slice += W[:, :, :, c] * dZ[i, h, w, c]
-                    # dW += Ap_s * dZ[i, h, w, c]
-    db = np.sum(dZ, axis=(1, 2, 3))
+                    dW[:, :, :, c] += Ap_s * dZ[i, h, w, c]
+    db = np.sum(dZ, axis=(0, 1, 2))
     return pad, dW, db
