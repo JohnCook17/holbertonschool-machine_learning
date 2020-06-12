@@ -27,10 +27,8 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     img_h_out = int((img_h + 2 * ph - ker_h) / stride[0]) + 1
     img_w_out = int((img_w + 2 * pw - ker_w) / stride[1]) + 1
 
-    dA_prev = np.zeros(shape=(img_n, img_h_out, img_w_out, img_c_out))
-    pad_A_prev = np.pad(A_prev, pad_width=((0, 0), (ph, ph,), (pw, pw), (0, 0)),
-                 mode="constant", constant_values=0)
-    pad_dZ = np.pad(dZ, pad_width=((0, 0), (ph, ph,), (pw, pw), (0, 0)),
+    A_prev_p = np.zeros(shape=(img_n, img_h_out, img_w_out, img_c_in))
+    pad = np.pad(A_prev, pad_width=((0, 0), (ph, ph,), (pw, pw), (0, 0)),
                  mode="constant", constant_values=0)
     dW = np.zeros(W.shape)
     db = np.zeros(b.shape)
@@ -38,22 +36,20 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     print(img_h, img_w)
     print(img_h_out, img_w_out)
     print(ker_h, ker_w)
-    print(pad_dZ.shape)
+    print(dZ.shape)
 
-    for h in range(0, img_h_out):
-        for w in range(0, img_w_out):
-            for c in range(0, img_c_out):
-                print("loop")
-                print(h, w, c)
-                try:
-                    dA_slice = dA_prev[:, h * stride[0]: h * stride[0] + ker_h,
+    for i in range(0, img_n):
+        for h in range(0, img_h_out):
+            for w in range(0, img_w_out):
+                for c in range(0, img_c_out):
+                    print("loop")
+                    print(i, h, w, c)
+                    dA_slice = pad[i, h * stride[0]: h * stride[0] + ker_h,
+                                   w * stride[1]: w * stride[1] + ker_w, :]
+                    Ap_s = A_prev_p[i, h * stride[0]: h * stride[0] + ker_h,
                                     w * stride[1]: w * stride[1] + ker_w, :]
-                    dZ_slice = pad_dZ[:, h * stride[0]: h * stride[0] + ker_h,
-                                w * stride[1]: w * stride[1] + ker_w, :]
-                    dA_slice += W[:, :, :, c] * dZ_slice
-                    # dW += [:, h * stride[0]: h * stride[0] + ker_h, w * stride[1]: w * stride[1] + ker_w, :] * dZ_slice
-                except ValueError:
-                    pass
+                    dA_slice += W[:, :, :, c] * dZ[i, h, w, c]
+                    dW += Ap_s * dZ[i, h, w, c]
     db = np.sum(dZ, axis=(1, 2, 3))
-    print(dA_prev.shape)
-    return dA_prev, dW, db
+    print(pad.shape)
+    return pad, dW, db
