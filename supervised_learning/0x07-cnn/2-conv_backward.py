@@ -29,11 +29,9 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     img_h_out = int((img_h + 2 * ph - ker_h) / stride[0]) + 1
     img_w_out = int((img_w + 2 * pw - ker_w) / stride[1]) + 1
 
-    A_prev_p = np.zeros(shape=(img_n, img_h_out, img_w_out, img_c_in))
     pad = np.pad(A_prev, pad_width=((0, 0), (ph, ph,), (pw, pw), (0, 0)),
                  mode="constant", constant_values=0)
     dW = np.zeros(W.shape)
-    db = np.zeros(b.shape)
 
     # print(img_h, img_w)
     # print(img_h_out, img_w_out)
@@ -52,5 +50,5 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                                   w * stride[1]: w * stride[1] + ker_w, :]
                     dA_slice += W[:, :, :, c] * dZ[i, h, w, c]
                     dW[:, :, :, c] += Ap_s * dZ[i, h, w, c]
-    db = np.sum(dZ, axis=(0, 1, 2))
-    return pad, dW, db
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
+    return np.asarray(pad), dW, db
