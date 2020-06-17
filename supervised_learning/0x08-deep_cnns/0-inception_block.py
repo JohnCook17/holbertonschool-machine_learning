@@ -38,7 +38,8 @@ def inception_block(A_prev, filters):
                                kernel_size=(5, 5),
                                strides=(1, 1),
                                padding="same",
-                               activation="relu")(conv2d_3)
+                               activation="relu",
+                               kernel_initializer=initializer)(conv2d_3)
     conv2d_5 = K.layers.Conv2D(filters=filters[5],
                                kernel_size=(1, 1),
                                strides=(1, 1),
