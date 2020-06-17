@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""An inception block in tf keras"""
 import tensorflow.keras as K
 
 
 def inception_block(A_prev, filters):
-    """"""
+    """A_prev is the previous layer and filters is the number of filters to use
+    """
     conv2d_1 = K.layers.Conv2D(filters=filters[1],
                                kernel_size=(1, 1),
                                strides=(1, 1),
