@@ -48,8 +48,7 @@ def inception_network():
     inception_5a = inception_block(maxpool3, [256, 160, 320, 32, 128, 128])
     inception_5b = inception_block(inception_5a, [384, 192, 384, 48, 128, 128])
     avgpool = K.layers.AveragePooling2D(pool_size=(7, 7),
-                                        strides=(1, 1),
-                                        padding="same")(inception_5b)
+                                        strides=(1, 1))(inception_5b)
     drop40per = K.layers.Dropout(rate=0.4)(avgpool)
     softmax = K.layers.Dense(units=1000,
                              activation="softmax",
