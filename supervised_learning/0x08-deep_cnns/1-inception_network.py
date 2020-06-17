@@ -16,10 +16,9 @@ def inception_network():
                             kernel_initializer=initializer)(inputs)
     maxpool0 = K.layers.MaxPooling2D(pool_size=(3, 3),
                                      strides=(2, 2),
-                                     padding="same",
-                                     trainable=False)(conv0)
+                                     padding="same")(conv0)
     conv1a = K.layers.Conv2D(filters=64,
-                             kernel_size=(3, 3),
+                             kernel_size=(1, 1),
                              strides=(1, 1),
                              padding="same",
                              activation="relu",
@@ -53,6 +52,7 @@ def inception_network():
                                         padding="same")(inception_5b)
     drop40per = K.layers.Dropout(rate=0.4)(avgpool)
     softmax = K.layers.Dense(units=1000,
-                             activation="softmax")(drop40per)
+                             activation="softmax",
+                             kernel_initializer=initializer)(drop40per)
     model = K.Model(inputs=inputs, outputs=softmax)
     return model
