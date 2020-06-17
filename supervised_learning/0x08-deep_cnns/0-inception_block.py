@@ -46,6 +46,5 @@ def inception_block(A_prev, filters):
                                padding="same",
                                activation="relu",
                                kernel_initializer=initializer)(max_pooling2d)
-    concatenate = K.layers.concatenate([conv2d, conv2d_2, conv2d_4, conv2d_5],
-                                       axis=-1)
+    concatenate = K.layers.concatenate([conv2d, conv2d_2, conv2d_4, conv2d_5])
     return concatenate
