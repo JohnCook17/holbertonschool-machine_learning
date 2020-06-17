@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Inception network in tensorflow keras"""
 import tensorflow.keras as K
 inception_block = __import__('0-inception_block').inception_block
 
 
 def inception_network():
-    """"""
+    """The inception network"""
     initializer = K.initializers.he_normal()
     inputs = K.Input(shape=(224, 224, 3))
     conv0 = K.layers.Conv2D(filters=64,
