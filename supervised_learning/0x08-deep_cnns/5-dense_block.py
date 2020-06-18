@@ -4,13 +4,15 @@ import tensorflow.keras as K
 
 
 def dense_block(X, nb_filters, growth_rate, layers):
-    """"""
+    """A dense block, X is the previous layer, nb_filters is the number of
+    filters to use, growth rate is the rate to change the number of filters
+    by, and layers is how many layers"""
     initializer = K.initializers.he_normal()
     filter_total = 0
     for layer in range(1, layers + 1):
         batch_normalization = K.layers.BatchNormalization()(X)
         activation = K.layers.Activation("relu")(batch_normalization)
-        conv2d = K.layers.Conv2D(filters=nb_filters + growth_rate * 2,
+        conv2d = K.layers.Conv2D(filters=nb_filters + growth_rate * (layer - 1),
                                  kernel_size=(1, 1),
                                  padding="same",
                                  activation="relu",
