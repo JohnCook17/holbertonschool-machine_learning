@@ -21,7 +21,6 @@ def dense_block(X, nb_filters, growth_rate, layers):
         conv2d1 = K.layers.Conv2D(filters=growth_rate,
                                   kernel_size=(3, 3),
                                   padding="same",
-                                  activation="relu",
                                   kernel_initializer=initializer)(activation1)
         concatenate = K.layers.concatenate([X, conv2d1])
         X = concatenate
