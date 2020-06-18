@@ -14,6 +14,6 @@ def transition_layer(X, nb_filters, compression):
                              padding="same",
                              kernel_initializer=initializer)(activation)
     average_pooling2d = K.layers.AveragePooling2D(pool_size=(2, 2),
-                                                  strides=(1, 1),
+                                                  strides=(2, 2),
                                                   padding="same")(conv2d)
     return average_pooling2d, int(nb_filters * compression)
