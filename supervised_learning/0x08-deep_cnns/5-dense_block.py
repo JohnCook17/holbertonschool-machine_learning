@@ -25,5 +25,5 @@ def dense_block(X, nb_filters, growth_rate, layers):
                                   kernel_initializer=initializer)(activation1)
         concatenate = K.layers.concatenate([X, conv2d1])
         X = concatenate
-        filter_total = growth_rate + (nb_filters + growth_rate * (layer - 1))
+        filter_total = nb_filters + growth_rate * (layer)
     return X, filter_total
