@@ -14,6 +14,8 @@ if __name__ == "__main__":
     # preprocessing
     Y = K.utils.to_categorical(Y[:])
     X = K.applications.resnet50.preprocess_input(X)
+    Y_test = K.utils.to_categorical(Y_test[:])
+    X_test = K.applications.resnet50.preprocess_input(X_test)
     # input layer and lambda layer
     inputs = K.Input(shape=(32, 32, 3))
     """
@@ -57,10 +59,11 @@ if __name__ == "__main__":
     model = K.Model(inputs=inputs, outputs=outputs)
     model.compile(optimizer="adam",
                   loss="categorical_crossentropy",
-                  metrics=["acc"])
+                  metrics=["loss", "acc"])
     callback = K.callbacks.EarlyStopping(monitor="loss", patience=3)
     model.fit(X,
               Y,
+              validation_data=(X_test, Y_test),
               epochs=50,
               verbose=True,
               batch_size=128,
