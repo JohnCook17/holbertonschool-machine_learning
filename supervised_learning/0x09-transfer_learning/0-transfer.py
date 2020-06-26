@@ -62,11 +62,11 @@ if __name__ == "__main__":
     model.fit(X,
               Y,
               epochs=50,
-              verbose=1,
+              verbose=True,
               batch_size=128,
               shuffle=True,
-              callbacks=[callback, learning_rate_0],
-              verbose=True)
+              callbacks=[callback, learning_rate_0]
+              )
     model.save("cifar10.h5")
 
 
