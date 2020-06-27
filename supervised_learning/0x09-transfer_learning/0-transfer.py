@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
     # load data
     (X, Y), (X_test, Y_test) = K.datasets.cifar10.load_data()
-    # X = X[0:256, :, :, :]
-    # Y = Y[0:256, :]
+    X = X[0:256, :, :, :]
+    Y = Y[0:256, :]
     # preprocessing
     Y = K.utils.to_categorical(Y[:])
     X = K.applications.xception.preprocess_input(X)
@@ -70,14 +70,16 @@ if __name__ == "__main__":
                   batch_size=128
                   )
         model.save("frozen_layers.h5")
+        model.save_weights("frozen_weights.h5")
         loaded_model = K.models.load_model("frozen_layers.h5")
     except MemoryError("Try lowering the batch size"):
         exit()
-    # remove softmax layer
+    # load weights and remove softmax layer
+    loaded_model.load_weights("frozen_weights.h5")
     loaded_model.layers.pop()
     # set up new model
     model = K.Sequential()
-    model.add(loaded_model.layers)
+    model.add(loaded_model)
     # new layers here
     model.add(K.layers.Dense(units=512,
                              activation="relu",
