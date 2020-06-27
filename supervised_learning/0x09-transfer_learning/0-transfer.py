@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
     # load data
     (X, Y), (X_test, Y_test) = K.datasets.cifar10.load_data()
-    X = X[0:256, :, :, :]
-    Y = Y[0:256, :]
+    # X = X[0:256, :, :, :]
+    # Y = Y[0:256, :]
     # preprocessing
     Y = K.utils.to_categorical(Y[:])
     X = K.applications.xception.preprocess_input(X)
@@ -39,8 +39,8 @@ if __name__ == "__main__":
         inputs = K.Input(shape=(32, 32, 3))
         lam = K.layers.Lambda(lambda X:
                               K.backend.resize_images(X,
-                                                      height_factor=9,
-                                                      width_factor=9,
+                                                      height_factor=7,
+                                                      width_factor=7,
                                                       data_format="channels_last"
                                                       ))(inputs)
         # Transfer learning layers
@@ -76,10 +76,10 @@ if __name__ == "__main__":
         exit()
     # load weights and remove softmax layer
     loaded_model.load_weights("frozen_weights.h5")
-    loaded_model.layers.pop()
     # set up new model
     model = K.Sequential()
-    model.add(loaded_model)
+    model.add(loaded_model.layers[-2])
+    model.layers[0].trainable = False
     # new layers here
     model.add(K.layers.Dense(units=512,
                              activation="relu",
