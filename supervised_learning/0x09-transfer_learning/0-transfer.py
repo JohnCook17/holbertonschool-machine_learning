@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
     # load data
     (X, Y), (X_test, Y_test) = K.datasets.cifar10.load_data()
-    X = X[0:256, :, :, :]
-    Y = Y[0:256, :]
+    # X = X[0:256, :, :, :]
+    # Y = Y[0:256, :]
     # preprocessing
     Y = K.utils.to_categorical(Y[:])
     X = K.applications.xception.preprocess_input(X)
@@ -31,7 +31,6 @@ if __name__ == "__main__":
     # input layer and lambda layer save and load for faster training
     try:
         loaded_model = K.models.load_model("frozen_layers.h5")
-        inputs = loaded_model.layers[-2].output
     except Exception as e:
         if isinstance(e, OSError):
             pass
@@ -72,30 +71,34 @@ if __name__ == "__main__":
                   )
         model.save("frozen_layers.h5")
         loaded_model = K.models.load_model("frozen_layers.h5")
-        inputs = loaded_model.layers[-2].output
     except MemoryError("Try lowering the batch size"):
         exit()
+    # remove softmax layer
+    loaded_model.layers.pop()
+    # set up new model
+    model = K.Sequential()
+    model.add(loaded_model.layers)
     # new layers here
-    FC_0 = K.layers.Dense(units=512,
-                          activation="relu",
-                          kernel_initializer=K.initializers.he_normal()
-                          )(inputs)
+    model.add(K.layers.Dense(units=512,
+                             activation="relu",
+                             kernel_initializer=K.initializers.he_normal()
+                             ))
     # D_0 = K.layers.Dropout(0.5)(FC_0)
-    FC_1 = K.layers.Dense(units=256,
-                          activation="relu",
-                          kernel_initializer=K.initializers.he_normal()
-                          )(FC_0)
+    model.add(K.layers.Dense(units=256,
+                             activation="relu",
+                             kernel_initializer=K.initializers.he_normal()
+                             ))
     # D_1 = K.layers.Dropout(0.5)(FC_1)
-    FC_2 = K.layers.Dense(units=128,
-                          activation="relu",
-                          kernel_initializer=K.initializers.he_normal()
-                          )(FC_1)
-    D_2 = K.layers.Dropout(0.5)(FC_2)
-    outputs = K.layers.Dense(units=10,
+    model.add(K.layers.Dense(units=128,
+                             activation="relu",
+                             kernel_initializer=K.initializers.he_normal()
+                             ))
+    # model.add(K.layers.Dropout(0.5))
+    model.add(K.layers.Dense(units=10,
                              activation="softmax",
                              kernel_initializer=K.initializers.he_normal()
-                             )(D_2)
-    model = K.Model(inputs=inputs, outputs=outputs)
+                             ))
+    # model = K.Model(inputs=inputs, outputs=outputs)
     model.compile(optimizer="adam",
                   loss="categorical_crossentropy",
                   metrics=["acc"])
