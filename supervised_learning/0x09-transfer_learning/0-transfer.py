@@ -10,19 +10,24 @@ if __name__ == "__main__":
 
     # load data
     (X, Y), (X_test, Y_test) = K.datasets.cifar10.load_data()
+    # uncomment for rapid test
     # X = X[0:256, :, :, :]
     # Y = Y[0:256, :]
+    # X_test = X_test[0:256, :, :, :]
+    # Y_test = Y_test[0:256, :]
     # preprocessing
     Y = K.utils.to_categorical(Y[:])
     X = K.applications.xception.preprocess_input(X)
     Y_test = K.utils.to_categorical(Y_test[:])
     X_test = K.applications.xception.preprocess_input(X_test)
+    # data format
+    df = "channels_last"
     # call backs
     save_best = K.callbacks.ModelCheckpoint(filepath="cifar10.h5",
                                             monitor="val_acc",
                                             save_best_only=True,
                                             )
-    early_stop = K.callbacks.EarlyStopping(monitor="loss",
+    early_stop = K.callbacks.EarlyStopping(monitor="val_loss",
                                            patience=3
                                            )
     learning_rate_0 = K.callbacks.LearningRateScheduler(learning_rate,
@@ -41,7 +46,7 @@ if __name__ == "__main__":
                               K.backend.resize_images(X,
                                                       height_factor=7,
                                                       width_factor=7,
-                                                      data_format="channels_last"
+                                                      data_format=df
                                                       ))(inputs)
         # Transfer learning layers
         xception = K.applications.Xception(include_top=False,
@@ -70,40 +75,45 @@ if __name__ == "__main__":
                   batch_size=128
                   )
         model.save("frozen_layers.h5")
-        model.save_weights("frozen_weights.h5")
         loaded_model = K.models.load_model("frozen_layers.h5")
     except MemoryError("Try lowering the batch size"):
         exit()
-    # load weights and remove softmax layer
-    loaded_model.load_weights("frozen_weights.h5")
     # set up new model
-    model = K.Sequential()
-    model.add(loaded_model.layers[-2])
-    model.layers[0].trainable = False
+    frozen_layers = K.Model(inputs=loaded_model.input,
+                            outputs=loaded_model.layers[-2].output
+                            )
+    X = frozen_layers.predict(X,
+                              verbose=True
+                              )
+    X_test = frozen_layers.predict(X_test,
+                                   verbose=True
+                                   )
+    # inputs
+    inputs = K.Input((2048,))
     # new layers here
-    model.add(K.layers.Dense(units=512,
-                             activation="relu",
-                             kernel_initializer=K.initializers.he_normal()
-                             ))
+    layer = K.layers.Dense(units=512,
+                           activation="relu",
+                           kernel_initializer=K.initializers.he_normal()
+                           )(inputs)
     # D_0 = K.layers.Dropout(0.5)(FC_0)
-    model.add(K.layers.Dense(units=256,
-                             activation="relu",
-                             kernel_initializer=K.initializers.he_normal()
-                             ))
+    layer = K.layers.Dense(units=256,
+                           activation="relu",
+                           kernel_initializer=K.initializers.he_normal()
+                           )(layer)
     # D_1 = K.layers.Dropout(0.5)(FC_1)
-    model.add(K.layers.Dense(units=128,
-                             activation="relu",
-                             kernel_initializer=K.initializers.he_normal()
-                             ))
+    layer = K.layers.Dense(units=128,
+                           activation="relu",
+                           kernel_initializer=K.initializers.he_normal()
+                           )(layer)
     # model.add(K.layers.Dropout(0.5))
-    model.add(K.layers.Dense(units=10,
+    outputs = K.layers.Dense(units=10,
                              activation="softmax",
                              kernel_initializer=K.initializers.he_normal()
-                             ))
-    # model = K.Model(inputs=inputs, outputs=outputs)
+                             )(layer)
+    model = K.Model(inputs=inputs, outputs=outputs)
     model.compile(optimizer="adam",
                   loss="categorical_crossentropy",
-                  metrics=["acc"])
+                  metrics=["accuracy"])
     # train
     model.fit(X,
               Y,
@@ -114,7 +124,6 @@ if __name__ == "__main__":
               shuffle=True,
               callbacks=[early_stop, learning_rate_0, save_best]
               )
-    model.save("cifar10.h5")
 
 
 if __name__ != "__main__":
