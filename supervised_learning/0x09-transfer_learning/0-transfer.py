@@ -42,15 +42,15 @@ if __name__ == "__main__":
         else:
             exit()
         inputs = K.Input(shape=(32, 32, 3))
-        lam = K.layers.Lambda(lambda X:
-                              K.backend.resize_images(X,
-                                                      height_factor=7,
-                                                      width_factor=7,
-                                                      data_format=df
-                                                      ))(inputs)
+        l = K.layers.Lambda(lambda X:
+                            K.backend.resize_images(X,
+                                                    height_factor=7,
+                                                    width_factor=7,
+                                                    data_format="channels_last"
+                                                    ))(inputs)
         # Transfer learning layers
         xception = K.applications.Xception(include_top=False,
-                                           input_tensor=lam,
+                                           input_tensor=l,
                                            weights="imagenet",
                                            pooling="max"
                                            )
@@ -105,7 +105,7 @@ if __name__ == "__main__":
                            activation="relu",
                            kernel_initializer=K.initializers.he_normal()
                            )(layer)
-    # model.add(K.layers.Dropout(0.5))
+    # layer = K.layers.Dropout()(layer)
     outputs = K.layers.Dense(units=10,
                              activation="softmax",
                              kernel_initializer=K.initializers.he_normal()
@@ -126,9 +126,15 @@ if __name__ == "__main__":
               )
 
 
-if __name__ != "__main__":
-    def preprocess_data(X, Y):
-        """"""
-        Y_p = K.utils.to_categorical(Y[:])
-        X_p = K.applications.xception.preprocess_input(X)
-        return X_p, Y_p
+def preprocess_data(X, Y):
+    """"""
+    Y_p = K.utils.to_categorical(Y[:])
+    X_p = K.applications.xception.preprocess_input(X)
+    loaded_model = K.models.load_model("frozen_layers.h5")
+    frozen_layers = K.Model(inputs=loaded_model.input,
+                            outputs=loaded_model.layers[-2].output
+                            )
+    X_p = frozen_layers.predict(X_p,
+                                verbose=True
+                                )
+    return X_p, Y_p
