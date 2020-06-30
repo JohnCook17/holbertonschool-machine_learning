@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Transfer learning with xception"""
 import tensorflow.keras as K
 
 if __name__ == "__main__":
 
     def learning_rate(epoch):
-        """"""
+        """The learning rate scheduler"""
         return 0.001 / (1 + 1 * epoch)
 
     # load data
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
 
 def preprocess_data(X, Y):
-    """"""
+    """The data preprocessing"""
     Y_p = K.utils.to_categorical(Y[:])
     X_p = K.applications.xception.preprocess_input(X)
     loaded_model = K.models.load_model("frozen_layers.h5")
