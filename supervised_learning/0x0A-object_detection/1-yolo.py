@@ -2,7 +2,6 @@
 """You only look once"""
 import numpy as np
 import tensorflow as tf
-import cv2
 
 
 class Yolo:
@@ -53,6 +52,15 @@ class Yolo:
         box_confidence = []
         box_class_probs = []
         for output in outputs:
+            image_height = image_size[0]
+            image_width = image_size[1]
+            anchor_boxes_shape = output.shape[2]
+            classes_shape = output.shape[3]
+            output = np.resize(output,
+                               (image_height,
+                                image_width,
+                                anchor_boxes_shape,
+                                classes_shape))
             boxes.append(output[:, :, :, 0: 4])
             box_confidence.append(output[:, :, :, 4: 5])
             box_class_probs.append(output[:, :, :, 5:])
