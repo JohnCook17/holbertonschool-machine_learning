@@ -51,18 +51,34 @@ class Yolo:
         boxes = []
         box_confidence = []
         box_class_probs = []
-        for output in outputs:
+        # print(self.anchors.shape)
+        for b, output in enumerate(outputs):
+            anchors = self.anchors[b]
+            # print(anchors.shape)
+            # anchor_number = output.shape[2]
+            # print(anchors)
+            grid_height, grid_width = output.shape[:2]
+            # print(grid_height, grid_width)
             image_height = image_size[0]
             image_width = image_size[1]
-            anchor_boxes_shape = output.shape[2]
-            classes_shape = output.shape[3]
-            output = np.resize(output,
-                               (image_height,
-                                image_width,
-                                anchor_boxes_shape,
-                                classes_shape))
-            boxes.append(output[:, :, :, 0: 4])
-            box_confidence.append(output[:, :, :, 4: 5])
-            box_class_probs.append(output[:, :, :, 5:])
+            # print(image_height, image_width)
+            # output = output.reshape((grid_height, grid_width, anchor_number, -1))
+            # output[..., :2] = 1 / (1 + np.exp(-output[..., :2]))
+            # output[..., 4:] = 1 / (1 + np.exp(-output[..., 4:]))
+            ph, pw = anchors.shape
+            # class_conf = output[:][:][b][4]
+            print(output[..., b, :4].shape)
+            box = output[..., b, :4]
+            x = 1 / (1 + np.exp(box[..., 0]))
+            y = 1 / (1 + np.exp(box[..., 1]))
+            w = pw * np.exp(box[..., 2])
+            h = ph * np.exp(box[..., 3])
+            # print(x)
+            # print(x - w / 2)
+            # classes = output[:][:][b][5:]
+            box = np.array([rx - rw / 2, ry - rh / 2, rx + rw / 2, ry + rh /2])
+            boxes.append(box)
+            # box_confidence.append(class_conf)
+            # box_class_probs.append(classes)
 
-        return boxes, box_confidence, box_class_probs
+        return boxes, None, None
