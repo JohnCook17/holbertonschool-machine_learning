@@ -65,19 +65,25 @@ class Yolo:
             # output = output.reshape((grid_height, grid_width, anchor_number, -1))
             # output[..., :2] = 1 / (1 + np.exp(-output[..., :2]))
             # output[..., 4:] = 1 / (1 + np.exp(-output[..., 4:]))
+            input_shape = self.model.layers[0].input_shape
+            print(input_shape[1], input_shape[2])
             ph, pw = anchors.shape
-            # class_conf = output[:][:][b][4]
-            print(output[..., b, :4].shape)
-            box = output[..., b, :4]
-            x = 1 / (1 + np.exp(box[..., 0]))  # what is cx?
-            y = 1 / (1 + np.exp(box[..., 1]))  # what is cy?
-            w = pw * np.exp(box[..., 2])
-            h = ph * np.exp(box[..., 3])
-            # print(x)
+            # class_conf = output[:, :, :, 4] sigmoid here, watch shape
+            print(output[..., :4].shape)
+            box = output[..., :4]
+            x = 1 / (1 + np.exp(box[..., 0])) + np.arange(grid_width).reshape((1, grid_width, 1)) / grid_width * image_width
+            y = 1 / (1 + np.exp(box[..., 1])) + np.arange(grid_height).reshape((grid_height, 1, 1)) / grid_height * image_height
+            w = pw * np.exp(box[..., 2]) / input_shape[1] * image_width
+            h = ph * np.exp(box[..., 3]) / input_shape[2] * image_height
+            print(x.shape)
+            print(w.shape)
             # print(x - w / 2)
-            # classes = output[:][:][b][5:]
-            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2])  # is this math right?
+            # classes = output[:][:][:][5:] sigmoid here
+            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2]) # check shape
+            print(box.shape)
+            box = np.moveaxis(box, 0, -1)
             boxes.append(box)
+            print(box.shape)
             # box_confidence.append(class_conf)
             # box_class_probs.append(classes)
 
