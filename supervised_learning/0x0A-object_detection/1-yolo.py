@@ -69,14 +69,14 @@ class Yolo:
             # class_conf = output[:][:][b][4]
             print(output[..., b, :4].shape)
             box = output[..., b, :4]
-            x = 1 / (1 + np.exp(box[..., 0]))
-            y = 1 / (1 + np.exp(box[..., 1]))
+            x = 1 / (1 + np.exp(box[..., 0]))  # what is cx?
+            y = 1 / (1 + np.exp(box[..., 1]))  # what is cy?
             w = pw * np.exp(box[..., 2])
             h = ph * np.exp(box[..., 3])
             # print(x)
             # print(x - w / 2)
             # classes = output[:][:][b][5:]
-            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2])
+            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2])  # is this math right?
             boxes.append(box)
             # box_confidence.append(class_conf)
             # box_class_probs.append(classes)
