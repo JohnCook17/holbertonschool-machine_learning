@@ -76,7 +76,7 @@ class Yolo:
             # print(x)
             # print(x - w / 2)
             # classes = output[:][:][b][5:]
-            box = np.array([rx - rw / 2, ry - rh / 2, rx + rw / 2, ry + rh /2])
+            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2])
             boxes.append(box)
             # box_confidence.append(class_conf)
             # box_class_probs.append(classes)
