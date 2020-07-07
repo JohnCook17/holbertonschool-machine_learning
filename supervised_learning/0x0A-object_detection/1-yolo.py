@@ -59,16 +59,20 @@ class Yolo:
             grid_height, grid_width = output.shape[:2]
             anchor_boxes = output.shape[2]
             ph, pw = anchors.shape
-            class_conf = 1 / (1 + np.exp(output[:, :, :, 4]))
-            class_conf = class_conf.reshape(grid_height, grid_width, anchor_boxes, 1)
+            # set up boxes
             box = output[..., :4]
-            x = 1 / (1 + np.exp(box[..., 0])) + np.arange(grid_width).reshape((1, grid_width, 1)) / grid_width
-            y = 1 / (1 + np.exp(box[..., 1])) + np.arange(grid_height).reshape((grid_height, 1, 1)) / grid_height
-            w = pw * np.exp(box[..., 2]) / input_shape[1]
-            h = ph * np.exp(box[..., 3]) / input_shape[2]
-            classes = 1 / (1 + np.exp(output[:][:][:][5:]))
-            box = np.array([x - w / 2, y - h / 2, x + w / 2, y + h / 2])
+            x = (1 / (1 + np.exp(-box[..., 0])) + np.arange(grid_width).reshape((1, grid_width, 1))) / grid_width
+            y = (1 / (1 + np.exp(-box[..., 1])) + np.arange(grid_height).reshape((grid_height, 1, 1))) / grid_height
+            w = (pw * np.exp(-box[..., 2])) / input_shape[1]
+            h = (ph * np.exp(-box[..., 3])) / input_shape[2]
+            box = np.array([(x - w / 2) * image_width, (y - h / 2) * image_height, (x + w / 2) * image_width, (y + h / 2) * image_height])
             box = np.moveaxis(box, 0, -1)
+            # set up class conf
+            class_conf = 1 / (1 + np.exp(-output[:, :, :, 4]))
+            class_conf = class_conf.reshape(grid_height, grid_width, anchor_boxes, 1)
+            # set up classes
+            classes = 1 / (1 + np.exp(-output[:][:][:][5:]))
+            # append to list
             boxes.append(box)
             box_confidence.append(class_conf)
             box_class_probs.append(classes)
