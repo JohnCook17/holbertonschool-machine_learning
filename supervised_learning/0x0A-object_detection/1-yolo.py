@@ -48,30 +48,48 @@ class Yolo:
 
     def process_outputs(self, outputs, image_size):
         """Processed outputs"""
+        def sigmoid(x):
+            return 1 / (1 + np.exp(-x))
         boxes = []
         box_confidence = []
         box_class_probs = []
         image_height = image_size[0]
         image_width = image_size[1]
-        input_shape = self.model.layers[0].input_shape
+        input_shape = self.model.input.shape
         for b, output in enumerate(outputs):
             anchors = self.anchors[b]
             grid_height, grid_width = output.shape[:2]
             anchor_boxes = output.shape[2]
-            ph, pw = anchors.shape
+            pw = anchors[:, 0]
+            ph = anchors[:, 1]
+            pw = pw.reshape(1, 1, len(pw))
+            ph = ph.reshape(1, 1, len(ph))
             # set up boxes
             box = output[..., :4]
-            x = (1 / (1 + np.exp(-box[..., 0])) + np.arange(grid_width).reshape((1, grid_width, 1))) / grid_width
-            y = (1 / (1 + np.exp(-box[..., 1])) + np.arange(grid_height).reshape((grid_height, 1, 1))) / grid_height
-            w = (pw * np.exp(-box[..., 2])) / input_shape[1]
-            h = (ph * np.exp(-box[..., 3])) / input_shape[2]
-            box = np.array([(x - w / 2) * image_width, (y - h / 2) * image_height, (x + w / 2) * image_width, (y + h / 2) * image_height])
+            x = sigmoid(box[..., 0])
+            y = sigmoid(box[..., 1])
+            cx = np.tile(np.arange(grid_width), grid_height).reshape(grid_width, grid_width, 1)
+            cy = np.tile(np.arange(grid_width), grid_height).reshape(grid_height, grid_height).T.reshape(grid_height, grid_height, 1)
+            # cx = np.arange(grid_width).reshape((1, grid_width, 1))
+            # cy = np.arange(grid_height).reshape((grid_height, 1, 1))
+            x = x + cx
+            y = y + cy
+            x = x / grid_width
+            y = y / grid_height
+            w = (pw * np.exp(box[..., 2]))
+            h = (ph * np.exp(box[..., 3]))
+            w = w / int(input_shape[1])
+            h = h / int(input_shape[2])
+            box = np.array([(x - w / 2) * image_width,
+                            (y - h / 2) * image_height,
+                            (x + w / 2) * image_width,
+                            (y + h / 2) * image_height])
             box = np.moveaxis(box, 0, -1)
             # set up class conf
             class_conf = 1 / (1 + np.exp(-output[:, :, :, 4]))
             class_conf = class_conf.reshape(grid_height, grid_width, anchor_boxes, 1)
             # set up classes
-            classes = 1 / (1 + np.exp(-output[:][:][:][5:]))
+            classes = 1 / (1 + np.exp(-output[:, :, :, 5:]))
             # append to list
             boxes.append(box)
             box_confidence.append(class_conf)
