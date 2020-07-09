@@ -68,8 +68,11 @@ class Yolo:
             box = output[..., :4]
             x = sigmoid(box[..., 0])
             y = sigmoid(box[..., 1])
-            cx = np.tile(np.arange(grid_width), grid_height).reshape(grid_width, grid_width, 1)
-            cy = np.tile(np.arange(grid_width), grid_height).reshape(grid_height, grid_height).T.reshape(grid_height, grid_height, 1)
+            cx = (np.tile(np.arange(grid_width), grid_height).reshape
+                  (grid_width, grid_width, 1))
+            cy = (np.tile(np.arange(grid_width), grid_height).reshape
+                  (grid_height, grid_height).T.reshape(grid_height,
+                                                       grid_height, 1))
             # cx = np.arange(grid_width).reshape((1, grid_width, 1))
             # cy = np.arange(grid_height).reshape((grid_height, 1, 1))
             x = x + cx
@@ -87,7 +90,9 @@ class Yolo:
             box = np.moveaxis(box, 0, -1)
             # set up class conf
             class_conf = 1 / (1 + np.exp(-output[:, :, :, 4]))
-            class_conf = class_conf.reshape(grid_height, grid_width, anchor_boxes, 1)
+            class_conf = class_conf.reshape(grid_height,
+                                            grid_width,
+                                            anchor_boxes, 1)
             # set up classes
             classes = 1 / (1 + np.exp(-output[:, :, :, 5:]))
             # append to list
