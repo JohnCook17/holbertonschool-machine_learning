@@ -196,12 +196,12 @@ class Yolo:
         shape = self.model.input.shape
         shape = (shape[1], shape[2])
         for image in images:
-            image = image / 255
             image_height, image_width = image.shape[0], image.shape[1]
             image = cv2.resize(image,
                                dsize=shape,
                                interpolation=cv2.INTER_CUBIC)
             image_shape = [image_height, image_width]
             image_shapes.append(image_shape)
+            image = image / 255
             pimages.append(image)
         return np.asarray(pimages), np.asarray(image_shapes)
