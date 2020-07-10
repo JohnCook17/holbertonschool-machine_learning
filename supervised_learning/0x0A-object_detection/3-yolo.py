@@ -157,7 +157,7 @@ class Yolo:
                           (bother[:, 3] - bother[:, 1]))
 
                 iou = intersection / (Amax + Aother - intersection)
-                below_ind = np.where(iou < self.nms_t)
+                below_ind = np.where(iou <= self.nms_t)
                 # not sure why below_ind is a tuple :(
                 sorted_ind = sorted_ind[below_ind[0] + 1]
 
