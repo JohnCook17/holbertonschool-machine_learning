@@ -144,8 +144,8 @@ class Yolo:
                 maximum = sorted_ind[0]
                 others = sorted_ind[1:]
                 keep_ind.append(maximum)
-                bmax = filtered_boxes[maximum]
-                bother = filtered_boxes[others]
+                bmax = b[maximum]
+                bother = b[others]
                 x1 = np.maximum(bmax[0], bother[:, 0])
                 y1 = np.maximum(bmax[1], bother[:, 1])
                 x2 = np.minimum(bmax[2], bother[:, 2])
@@ -157,9 +157,9 @@ class Yolo:
                           (bother[:, 3] - bother[:, 1]))
 
                 iou = intersection / (Amax + Aother - intersection)
-                below_ind = np.where(iou <= self.nms_t)
+                below_ind = np.where(iou <= self.nms_t)[0]
                 # not sure why below_ind is a tuple :(
-                sorted_ind = sorted_ind[below_ind[0] + 1]
+                sorted_ind = sorted_ind[below_ind + 1]
 
             if sorted_ind.size == 1:
                 keep_ind.append(sorted_ind[0])
