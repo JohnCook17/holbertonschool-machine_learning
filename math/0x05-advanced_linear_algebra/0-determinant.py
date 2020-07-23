@@ -36,6 +36,7 @@ def determinant(matrix):
                 raise TypeError("matrix must be a list of lists")
     else:
         raise TypeError("matrix must be a list of lists")
-    if len(matrix) != len(matrix[0]):
-        raise ValueError("matrix must be a square matrix")
+    for ele in matrix:
+        if len(ele) != len(matrix):
+            raise ValueError("matrix must be a square matrix")
     return d(matrix)
