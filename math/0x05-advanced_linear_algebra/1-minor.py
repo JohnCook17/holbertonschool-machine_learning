@@ -3,6 +3,7 @@
 
 
 def d(A):
+    """finds the determinant of A"""
     # print("A = ", A, type(A))
 
     if len(A) == 1:

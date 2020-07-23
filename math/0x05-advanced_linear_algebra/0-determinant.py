@@ -3,6 +3,7 @@
 
 
 def d(A):
+    """finds the determinant of A"""
     # print("A = ", A, type(A))
 
     if len(A) == 1:
@@ -21,10 +22,6 @@ def d(A):
             ret = d(my_copy)
             det += mul * ret * (-1) ** i
         return det
-    """return (sum((-1) ** i * A[0][i] * d([[A[x][y]for x in range(1, len(A))]
-                                        for y in range(1 + i, len(A))])
-                for i in range(len(A)))if isinstance(A, list) and len(A) > 1
-            else A[0][0])"""
 
 
 def determinant(matrix):
