@@ -24,28 +24,48 @@ def d(A):
         return det
 
 
-def cofactor(matrix):
-    """finds the cofactor of a matrix"""
+def determinant(matrix):
+    """Finds the determinate of a square matrix"""
+    if matrix == [[]]:
+        return 1
     if not isinstance(matrix, list):
         raise TypeError("matrix must be a list of lists")
-    if matrix and isinstance(matrix[0], list):
+    if matrix and isinstance(matrix[0], list) and len(matrix) >= 1:
         for element in matrix:
             if not isinstance(element, list):
                 raise TypeError("matrix must be a list of lists")
     else:
         raise TypeError("matrix must be a list of lists")
-    if len(matrix) != len(matrix[0]):
-        raise ValueError("matrix must be a square matrix")
-    if matrix == [] or matrix == [[]]:
-        raise ValueError("matrix must be a square matrix")
+    for ele in matrix:
+        if len(ele) != len(matrix):
+            raise ValueError("matrix must be a non-empty square matrix")
+    return d(matrix)
+
+
+def cofactor(matrix):
+    """finds the cofactor of a matrix"""
+    if not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    if matrix and isinstance(matrix[0], list) and len(matrix) >= 1:
+        for element in matrix:
+            if not isinstance(element, list):
+                raise TypeError("matrix must be a list of lists")
+    else:
+        raise TypeError("matrix must be a list of lists")
+    for ele in matrix:
+        if len(ele) != len(matrix):
+            raise ValueError("matrix must be a non-empty square matrix")
+    if not matrix:
+        raise ValueError("matrix must be a non-empty square matrix")
     if len(matrix) == 1:
         return [[1]]
     minors = []
     for i in range(len(matrix)):
         minors.append([])
         for j in range(len(matrix)):
-            minors[i].append(d([row[:j] + row[j + 1:]
-                                for row in (matrix[:i] + matrix[i + 1:])]))
+            minors[i].append(determinant([row[:j] + row[j + 1:]
+                                          for row in (matrix[:i] +
+                                                      matrix[i + 1:])]))
     cofactors = [[(-1) ** (i + j) * minors[i][j]for j in range(len(matrix))]
                  for i in range(len(matrix))]
     return cofactors
