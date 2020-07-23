@@ -26,16 +26,16 @@ def d(A):
 
 def determinant(matrix):
     """Finds the determinate of a square matrix"""
+    if matrix == [[]]:
+        return 1
     if not isinstance(matrix, list):
         raise TypeError("matrix must be a list of lists")
-    if matrix and isinstance(matrix[0], list):
+    if matrix and isinstance(matrix[0], list) and len(matrix) >= 1:
         for element in matrix:
             if not isinstance(element, list):
                 raise TypeError("matrix must be a list of lists")
     else:
         raise TypeError("matrix must be a list of lists")
-    if matrix == [[]]:
-        return 1
     if len(matrix) != len(matrix[0]):
         raise ValueError("matrix must be a square matrix")
     return d(matrix)

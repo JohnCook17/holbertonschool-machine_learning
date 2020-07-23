@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Finds the adjugate of a square matrix"""
 import numpy as np
-
+# transpose of cofactor
 
 def adjugate(matrix):
     """finds the adjugate of a matrix"""
