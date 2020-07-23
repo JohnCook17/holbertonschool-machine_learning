@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Finds the inverse of a square matrix"""
 import numpy as np
-
+# each element of the adjugate divided by the determinat
 
 def inverse(matrix):
     """finds the inverse of a matrix"""

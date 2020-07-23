@@ -1,6 +1,26 @@
 #!/usr/bin/env python3
 """Finds the cofactor of a square matrix"""
-import numpy as np
+# multiply by + or - alternating via (-1) ** (i+j)!!!
+
+
+def d(A):
+    # print("A = ", A, type(A))
+
+    if len(A) == 1:
+        return A[0][0]
+    if len(A) == 2:
+        return A[0][0] * A[1][1] - A[0][1] * A[1][0]
+    else:
+        det = 0
+        for i in range(len(A)):
+            my_copy = [[value for value in row] for row in A]
+            mul = my_copy[0][i]
+            my_copy.pop(0)
+            for ele in my_copy:
+                ele.pop(i)
+            ret = d(my_copy)
+            det += mul * ret * (-1) ** i
+        return det
 
 
 def cofactor(matrix):
@@ -17,11 +37,14 @@ def cofactor(matrix):
         raise ValueError("matrix must be a square matrix")
     if matrix == [] or matrix == [[]]:
         raise ValueError("matrix must be a square matrix")
-    U, sigma, Vt = np.linalg.svd(matrix)
-    N = len(sigma)
-    g = np.tile(sigma, N)
-    g[::(N+1)] = 1
-    G = np.diag(-(-1)**N*np.product(np.reshape(g, (N, N)), 1))
-    ret_mat = np.rint(U @ G @ Vt).tolist()
-    ret_mat = [[int(round(j)) for j in i] for i in ret_mat]
-    return ret_mat
+    if len(matrix) == 1:
+        return [[1]]
+    minors = []
+    for i in range(len(matrix)):
+        minors.append([])
+        for j in range(len(matrix)):
+            minors[i].append(d([row[:j] + row[j + 1:]
+                                for row in (matrix[:i] + matrix[i + 1:])]))
+    cofactors = [[(-1) ** (i + j) * minors[i][j]for j in range(len(matrix))]
+                 for i in range(len(matrix))]
+    return cofactors
