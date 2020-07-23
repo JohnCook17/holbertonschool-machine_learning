@@ -45,7 +45,7 @@ def minor(matrix):
     """finds all the minors of a matrix"""
     if not isinstance(matrix, list):
         raise TypeError("matrix must be a list of lists")
-    if matrix and isinstance(matrix[0], list):
+    if matrix and isinstance(matrix[0], list) and len(matrix) >= 1:
         for element in matrix:
             if not isinstance(element, list):
                 raise TypeError("matrix must be a list of lists")
@@ -54,7 +54,7 @@ def minor(matrix):
     for ele in matrix:
         if len(ele) != len(matrix):
             raise ValueError("matrix must be a square matrix")
-    if matrix == [] or matrix == [[]]:
+    if not matrix:
         raise ValueError("matrix must be a square matrix")
     if len(matrix) == 1:
         return [[1]]
