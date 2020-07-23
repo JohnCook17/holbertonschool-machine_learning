@@ -37,7 +37,7 @@ def determinant(matrix):
         raise TypeError("matrix must be a list of lists")
     for ele in matrix:
         if len(ele) != len(matrix):
-            raise ValueError("matrix must be a square matrix")
+            raise ValueError("matrix must be a non-empty square matrix")
     return d(matrix)
 
 
@@ -53,9 +53,9 @@ def minor(matrix):
         raise TypeError("matrix must be a list of lists")
     for ele in matrix:
         if len(ele) != len(matrix):
-            raise ValueError("matrix must be a square matrix")
+            raise ValueError("matrix must be a non-empty square matrix")
     if not matrix:
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
     if len(matrix) == 1:
         return [[1]]
     minors = []
