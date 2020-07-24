@@ -12,6 +12,8 @@ def definiteness(matrix):
         return None
     if matrix.shape[0] != matrix.shape[1]:
         return None
+    if not np.array_equal(matrix, matrix.T):
+        return None
     try:
         if np.where(np.linalg.eigvalsh(matrix) > 0,
                     True, False).all() is np.bool_(True):
