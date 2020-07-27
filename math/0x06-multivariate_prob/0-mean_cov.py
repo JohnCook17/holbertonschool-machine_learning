@@ -10,7 +10,7 @@ def cov(x, y):
 
 
 def cov_mat(X):
-    """"""
+    """finds the covariance matrix"""
     d, n = X.shape
     return np.array([[cov(X[i], X[j]) for j in range(d)] for i in range(d)])
 
