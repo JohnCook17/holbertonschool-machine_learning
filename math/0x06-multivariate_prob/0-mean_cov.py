@@ -5,7 +5,7 @@ import numpy as np
 
 def cov(x, y):
     """covariance"""
-    xbar, ybar= x.mean(), y.mean()
+    xbar, ybar = x.mean(), y.mean()
     return np.sum((x - xbar) * (y - ybar)) / (len(x) - 1)
 
 
