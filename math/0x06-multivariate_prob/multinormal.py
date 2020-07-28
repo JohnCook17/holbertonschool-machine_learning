@@ -26,3 +26,17 @@ class MultiNormal():
 
         self.mean = np.mean(data.T, axis=0, keepdims=True).T
         self.cov = cov_mat(data)
+
+    def pdf(self, x):
+        """Finds the pdf of a data point"""
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must by a numpy.ndarray")
+        if len(x.shape) != 2 or x.shape[1] != 1:
+            raise ValueError("x must have the shape({}, 1)".format(x.shape[0]))
+        k = x.shape[0]
+        con = 1 / ((2 * np.pi) ** (k / 2) * np.linalg.det(self.cov) ** 0.5)
+        exp = np.exp(-0.5 * np.matmul(np.matmul((x - self.mean).T,
+                                                np.linalg.inv(self.cov)),
+                                      (x - self.mean)))
+        x_hat = con * exp
+        return x_hat[0, 0]
