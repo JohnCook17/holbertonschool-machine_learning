@@ -37,7 +37,8 @@ class MultiNormal():
             raise ValueError("x must have the shape({}, 1)"
                              .format(self.cov.shape[0]))
         k = x.shape[0]
-        con = 1 / ((2 * np.pi) ** (k / 2) * np.linalg.det(self.cov) ** 0.5)
+        con = 1 / (np.power((2 * np.pi), (k / 2)) *
+                   np.power(np.linalg.det(self.cov), 0.5))
         exp = np.exp(-0.5 * np.matmul(np.matmul((x - self.mean).T,
                                                 np.linalg.inv(self.cov)),
                                       (x - self.mean)))
