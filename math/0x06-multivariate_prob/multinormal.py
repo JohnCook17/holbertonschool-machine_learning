@@ -34,7 +34,8 @@ class MultiNormal():
         if ((len(x.shape) != 2 or
              x.shape[1] != 1 or
              x.shape[0] != self.cov.shape[0])):
-            raise ValueError("x must have the shape({}, 1)".format(x.shape[0]))
+            raise ValueError("x must have the shape({}, 1)"
+                             .format(self.cov.shape[0]))
         k = x.shape[0]
         con = 1 / ((2 * np.pi) ** (k / 2) * np.linalg.det(self.cov) ** 0.5)
         exp = np.exp(-0.5 * np.matmul(np.matmul((x - self.mean).T,
