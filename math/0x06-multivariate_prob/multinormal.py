@@ -31,7 +31,9 @@ class MultiNormal():
         """Finds the pdf of a data point"""
         if not isinstance(x, np.ndarray):
             raise TypeError("x must by a numpy.ndarray")
-        if len(x.shape) != 2 or x.shape[1] != 1:
+        if ((len(x.shape) != 2 or
+             x.shape[1] != 1 or
+             x.shape[0] != self.cov.shape[0])):
             raise ValueError("x must have the shape({}, 1)".format(x.shape[0]))
         k = x.shape[0]
         con = 1 / ((2 * np.pi) ** (k / 2) * np.linalg.det(self.cov) ** 0.5)
