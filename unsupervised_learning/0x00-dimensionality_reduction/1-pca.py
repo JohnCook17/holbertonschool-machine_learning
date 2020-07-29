@@ -6,5 +6,7 @@ import numpy as np
 def pca(X, ndim):
     """finds the w of pca"""
     u, s, vh = np.linalg.svd(X)
-    T = u[:, 0: ndim] * s[0: ndim]
+    w = vh.T
+    X_m = X - np.mean(X, axis=0)
+    T = np.matmul(X_m, w[:, 0: ndim])
     return T
