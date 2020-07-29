@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""uses svd to get pca"""
 import numpy as np
 
 
 def pca(X, var=0.95):
-    """"""
+    """finds the w of pca"""
     # print(X.shape)
     u, s, vh = np.linalg.svd(X)
     # print(s.shape)
