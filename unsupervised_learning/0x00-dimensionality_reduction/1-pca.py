@@ -7,4 +7,5 @@ def pca(X, ndim):
     """finds the w of pca"""
     u, s, vh = np.linalg.svd(X)
     w = vh.T
-    return w[0:, 0:ndim]
+    T = X @ w[0:, 0:ndim]
+    return T
