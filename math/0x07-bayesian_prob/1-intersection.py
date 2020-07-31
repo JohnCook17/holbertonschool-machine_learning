@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""intersection of probabilities"""
 import numpy as np
 
 
 def intersection(x, n, P, Pr):
-    """"""
+    """Finds the intersection of the probability and the prior"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) or x < 0:
