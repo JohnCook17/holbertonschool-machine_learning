@@ -5,9 +5,9 @@ import numpy as np
 
 def likelihood(x, n, P):
     """P(A | B) = P(B | A) * P(A) / P(B)"""
-    if n < 1:
+    if not isinstance(n, int) and n < 1:
         raise ValueError("n must be a positive integer")
-    if x < 0:
+    if not isinstance(x, int) and x < 0:
         raise ValueError("x must be an integer that is"
                          " greater than or equal to 0")
     if x > n:
