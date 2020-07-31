@@ -7,12 +7,12 @@ def likelihood(x, n, P):
     """P(A | B) = P(B | A) * P(A) / P(B)"""
     if not isinstance(n, int) and n < 1:
         raise ValueError("n must be a positive integer")
-    if not isinstance(x, int) and x < 0:
+    if not isinstance(x, int) and not x >= 0:
         raise ValueError("x must be an integer that is"
                          " greater than or equal to 0")
     if x > n:
         raise ValueError("x cannot be greater than n")
-    if not isinstance(P, np.ndarray):
+    if not isinstance(P, np.ndarray) and len(P.shape) != 1:
         raise TypeError("P must be a 1D numpy.ndarray")
     if ((np.any(np.where(P < 0, True, False)) is True or
          np.any(np.where(P > 1, True, False)) is True)):
