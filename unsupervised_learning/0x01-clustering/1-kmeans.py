@@ -27,12 +27,13 @@ def class_assignment(X, C):
 
 def move_centroids(X, C, clss):
     """moves centroids"""
-    k = C.shape[1]
+    k = C.shape[0]
+    d = C.shape[1]
     for i in range(k):
         if X[clss == i].size == 0:
             x_max = np.max(X, axis=0)
             x_min = np.min(X, axis=0)
-            C[i, :] = np.random.uniform(x_min, x_max, (1, k))
+            C[i, :] = np.random.uniform(x_min, x_max, (1, d))
         else:
             C[i, :] = np.mean(X[clss == i], axis=0)
     return C
@@ -40,28 +41,31 @@ def move_centroids(X, C, clss):
 
 def kmeans(X, k, iterations=1000):
     """"""
-    if not isinstance(X, np.ndarray):
-        return None, None
-    if not isinstance(iterations, int) or iterations < 1:
-        return None, None
-    n, d = X.shape
-    if not isinstance(k, int) or k < 1 or k > n:
-        return None, None
-    C_prev_move = 0
-    C = initialize(X, k)
-    clss = []
-    for i in range(iterations):
-        # print(i)
-        C_prev = np.copy(C)
-        clss = class_assignment(X, C)
-        C = move_centroids(X, C, clss)
-        # print(C)
-        C_move = np.linalg.norm(C - C_prev)
-        if C_prev_move - C_move == 0:
+    try:
+        if not isinstance(X, np.ndarray):
+            return None, None
+        if not isinstance(iterations, int) or iterations < 1:
+            return None, None
+        n, d = X.shape
+        if not isinstance(k, int) or k < 1 or k > n:
+            return None, None
+        C_prev_move = 0
+        C = initialize(X, k)
+        clss = []
+        for i in range(iterations):
+            # print(i)
+            C_prev = np.copy(C)
             clss = class_assignment(X, C)
             C = move_centroids(X, C, clss)
-            print(i)
-            return C, clss
-        C_prev_move = C_move
-    clss = class_assignment(X, C)
-    return C, clss
+            # print(C)
+            C_move = np.linalg.norm(C - C_prev)
+            if C_prev_move - C_move == 0:
+                clss = class_assignment(X, C)
+                C = move_centroids(X, C, clss)
+                print(i)
+                return C, clss
+            C_prev_move = C_move
+        clss = class_assignment(X, C)
+        return C, clss
+    except Exception as e:
+        return None, None
