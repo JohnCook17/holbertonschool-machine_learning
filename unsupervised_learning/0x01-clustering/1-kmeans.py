@@ -62,7 +62,6 @@ def kmeans(X, k, iterations=1000):
             if C_prev_move - C_move == 0:
                 clss = class_assignment(X, C)
                 C = move_centroids(X, C, clss)
-                print(i)
                 return C, clss
             C_prev_move = C_move
         clss = class_assignment(X, C)
