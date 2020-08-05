@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""Functions involved in K means"""
 import numpy as np
 
 
@@ -40,7 +40,7 @@ def move_centroids(X, C, clss):
 
 
 def kmeans(X, k, iterations=1000):
-    """"""
+    """finds K centroids for the data set"""
     try:
         if not isinstance(X, np.ndarray):
             return None, None
