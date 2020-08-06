@@ -6,14 +6,10 @@ import numpy as np
 def pdf(X, m, S):
     """"""
     n, d = X.shape
-    first_term = (1 / ((2 * np.pi) ** (d / 2) * ((np.linalg.norm(S, axis=0, keepdims=True) ** 0.5))))
-    print(first_term.shape)
-    X_cent = X - m
-    print(X_cent.shape)
-    X_t = X_cent @ (np.linalg.inv(S))
-    print(X_t.shape)
-    second_term = np.exp(-.5 * X_t * (X_cent))
-    print(second_term.shape)
-    answer = first_term @ second_term.T
-    print(answer.shape)
-    return answer.flatten()
+    det = np.linalg.det(S)
+    first_term = (1 / ((2 * np.pi) ** (d / 2) * (det ** 0.5)))
+    Xm = X - m
+    X_t = ((np.linalg.inv(S)) @ Xm.T).T
+    second_term = np.exp(-.5 * np.sum(Xm * X_t, axis=1))
+    answer = first_term * second_term.T
+    return np.where(answer == 0, 1e-300, answer)
