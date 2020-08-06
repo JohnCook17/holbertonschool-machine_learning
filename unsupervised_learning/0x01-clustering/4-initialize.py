@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Sets up gmm"""
 import numpy as np
 kmeans = __import__('1-kmeans').kmeans
 
 
 def initialize(X, k):
-    """"""
+    """inits the values for gmm"""
     try:
         if k < 1:
             return None, None, None
