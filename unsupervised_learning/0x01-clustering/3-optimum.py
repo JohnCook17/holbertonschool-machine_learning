@@ -8,10 +8,12 @@ variance = __import__('2-variance').variance
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     """finds the optimum k"""
     try:
+        if not isinstance(kmin, int) or not isinstance(kmax, int):
+            return None, None
         if kmin < 1:
-            return None
+            return None, None
         if kmin >= kmax:
-            return None
+            return None, None
         res = []
         var_list = []
         for k in range(kmin, kmax + 1):
