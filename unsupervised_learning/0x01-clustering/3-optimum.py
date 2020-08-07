@@ -7,7 +7,7 @@ variance = __import__('2-variance').variance
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     """finds the optimum k"""
-    if not isinstance(X) or len(X.shape) != 2:
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
     if kmax is None:
         kmax = iterations
