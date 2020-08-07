@@ -28,10 +28,8 @@ def expectation(X, pi, m, S):
     for i in range(k):
         N = pdf(X, m[i], S[i])
         numerator = pi[i] * N
-        # print(numerator.shape)
         g.append(numerator)
     g = np.asarray(g)
-    likelihood = np.sum(np.log(np.matmul(pi[np.newaxis], g) * k))
-    # g /= np.sum(pi) * np.sum(g, axis=1)
-    g /= np.matmul(pi[np.newaxis], g) * k
+    likelihood = np.sum(np.log(np.sum(g, axis=0)))
+    g /= np.sum(g, axis=0)
     return g, likelihood
