@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Expectation step"""
 import numpy as np
 pdf = __import__('5-pdf').pdf
 
 
 def expectation(X, pi, m, S):
-    """"""
+    """performes expectation returns probs and likelihood"""
     k = pi.shape[0]
     g = []
     for i in range(k):
