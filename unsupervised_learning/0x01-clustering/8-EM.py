@@ -8,6 +8,12 @@ maximization = __import__('7-maximization').maximization
 
 def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
     """performs expectation maximization oh the X data set, with k clusters"""
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+        return None, None, None, None, None
+    if not isinstance(k, int) or k < 2:
+        return None, None, None, None, None
+    if not isinstance(iterations, int) or iterations < 1:
+        return None, None, None, None, None
     i = 0
     log_likelihood = 0
     diff = 0
