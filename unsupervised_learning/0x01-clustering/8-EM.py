@@ -14,6 +14,10 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None, None
     if not isinstance(iterations, int) or iterations < 1:
         return None, None, None, None, None
+    if not isinstance(verbose, bool):
+        return None, None, None, None, None
+    if not isinstance(tol, float) or tol < 0:
+        return None, None, None, None, None
     i = 0
     log_likelihood = 0
     diff = 0
