@@ -16,6 +16,7 @@ def regular(P):
         res = np.linalg.solve(QT, ones)
         if np.any(res < 0):
             return None
-        return res
+        res = [res]
+        return np.asarray(res)
     except Exception as e:
         return None
