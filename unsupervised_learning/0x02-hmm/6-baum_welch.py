@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""Baum Welch algorithm"""
 import numpy as np
 
 
@@ -56,29 +56,39 @@ def viterbi(Observation, Emission, Transition, Initial):
 
 
 def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
-    """"""
+    """Uses forward and backward algos above to calculate new values for
+    Transition and Emission, note to self, watch this video if stuck:
+    https://www.youtube.com/
+    watch?v=JRsdt05pMoI&list=PLix7MmR3doRo3NGNzrq48FItR3TDyuLCo&index=12"""
     M = Transition.shape[0]
     T = Observations.shape[0]
+    a = Transition
+    b = Emission
+    V = Observations
+
     for n in range(iterations):
-        alpha = forward(Observations, Emission, Transition, Initial)[1].T
-        beta = backward(Observations, Emission, Transition, Initial)[1].T
-        xi = np.zeros((M, M, T))
+        alpha = forward(V, b, a, Initial)[1].T
+        beta = backward(V, b, a, Initial)[1].T
+
+        xi = np.zeros((M, M, T - 1))
         for t in range(T - 1):
-            print(xi)
-            denominator = np.dot(np.dot(alpha[t, :].T, Initial) * Emission[:, Observations[t + 1]].T,  beta[t + 1, :])
+            denominator = np.matmul(np.matmul(alpha[t, :].T, a) *
+                                    b[:, V[t + 1]].T, beta[t + 1, :])
             for i in range(M):
-                numerator = alpha[t, i] * Initial[i, :] * Emission[:, Observations[t + 1]].T * beta[t + 1, :].T
-                print(numerator, denominator)
+                numerator = (alpha[t, i] * a[i, :] * b[:, V[t + 1]].T *
+                             beta[t + 1, :].T)
                 xi[i, :, t] = numerator / denominator
-        gama = np.sum(xi, axis=1)
-        # print(gama.shape)
-        Transition = np.sum(xi, 2) / np.sum(gama, axis=1).reshape((-1, 1))
-        gama = np.hstack((gama, np.sum(xi[:, :, T - 2], axis=0).reshape((-1, 1))))
-        gama = np.delete(gama, (0), axis=1)
-        # print(gama.shape)
-        K = Emission.shape[0]
-        denominator = np.sum(gama, axis=1)
+        gamma = np.sum(xi, axis=1)
+        a = np.sum(xi, 2) / np.sum(gamma, axis=1).reshape((-1, 1))
+
+        gamma = np.hstack((gamma, np.sum(xi[:, :, T - 2],
+                                         axis=0).reshape((-1, 1))))
+
+        K = b.shape[1]
+        denominator = np.sum(gamma, axis=1)
         for l in range(K):
-            Emission[:, l] = np.sum(gama[:, Observations == l], axis=1)
-        Emission = np.divide(Emission, denominator.reshape((-1, 1)))
-    return Transition, Emission
+            b[:, l] = np.sum(gamma[:, V == l], axis=1)
+
+        b = np.divide(b, denominator.reshape((-1, 1)))
+
+    return a, b
