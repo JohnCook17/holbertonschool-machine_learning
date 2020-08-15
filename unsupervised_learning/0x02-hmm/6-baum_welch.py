@@ -69,6 +69,8 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
     for n in range(iterations):
         alpha = forward(V, b, a, Initial)[1].T
         beta = backward(V, b, a, Initial)[1].T
+        a_prev = a
+        b_prev = b
 
         xi = np.zeros((M, M, T - 1))
         for t in range(T - 1):
@@ -91,4 +93,9 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         b = np.divide(b, denominator.reshape((-1, 1)))
 
+        if np.isclose(a_prev, a).all() or np.isclose(b_prev, b).all():
+            # print("early stop")
+            return a, b
+        # else:
+            # print(n)
     return a, b
