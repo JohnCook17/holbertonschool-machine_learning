@@ -93,7 +93,8 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         b = np.divide(b, denominator.reshape((-1, 1)))
 
-        if np.isclose(a_prev, a).all() or np.isclose(b_prev, b).all():
+        if ((np.isclose(a_prev, a, atol=1e-5).all() or
+             np.isclose(b_prev, b, atol=1e-5).all())):
             # print("early stop")
             return a, b
         # else:
