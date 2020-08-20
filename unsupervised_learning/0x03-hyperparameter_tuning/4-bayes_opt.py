@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bayesian optimization, using the Gaussian process"""
 import numpy as np
+from scipy.stats import norm
 GP = __import__('2-gp').GaussianProcess
 
 
@@ -18,20 +19,25 @@ class BayesianOptimization():
                  minimize=True):
         """Init values for later use"""
         self.f = f
-        self.gp = GP(X_init, Y_init)
-        self.X_s = np.linspace(bounds[0], bounds[1], ac_samples)[:, np.newaxis]
+        self.gp = GP(X_init, Y_init, l, sigma_f)
+        self.X_s = np.linspace(bounds[0], bounds[1], ac_samples).reshape(-1, 1)
         self.xsi = xsi
         self.minimize = minimize
 
     def acquisition(self):
-        """"""
+        """the acquisition function"""
         mu, sigma = self.gp.predict(self.X_s)
-        mu_sample = self.gp.predict(self.gp.X)
         # sigma = sigma.reshape(-1, 1)
-        mu_max = np.max(mu_sample)
+
+        if self.minimize is True:
+            mu_sample_opt = np.min(self.gp.Y)
+            imp = mu_sample_opt - mu - self.xsi
+        else:
+            mu_sample_opt = np.max(self.gp.Y)
+            imp = mu - mu_sample_opt - self.xsi
         with np.errstate(divide="warn"):
-            imp = mu - mu_max - self.xsi
             Z = imp / sigma
             ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
             ei[sigma == 0.0] = 0.0
-        return mu_max, ei
+        X_next = self.X_s[(np.argmax(ei, axis=0))]
+        return X_next, ei
