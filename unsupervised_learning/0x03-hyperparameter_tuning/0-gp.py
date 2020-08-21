@@ -4,7 +4,7 @@ import numpy as np
 
 
 class GaussianProcess:
-    """The Guassian Process optimization class"""
+    """The Gaussian Process optimization class"""
     def __init__(self, X_init, Y_init, l=1, sigma_f=1):
         """init values for later calculations"""
         self.X = X_init
