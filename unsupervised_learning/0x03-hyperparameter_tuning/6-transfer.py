@@ -15,7 +15,8 @@ if __name__ != "__main__":
               fc_size1,
               fc_size2,
               toy):
-        """"""
+        """Trains the model, makes requisite files for
+        faster performance if needed"""
 
         def learning_rate(epoch):
             """The learning rate scheduler"""
@@ -188,9 +189,10 @@ if __name__ != "__main__":
 
 
 class MyModel():
-    """"""
+    """This model is used to call train and uses the
+    GPyOpt to optimize parameters"""
     def __init__(self):
-        """"""
+        """inits values"""
         # set patience to same, epochs too
         self.bounds = [{"name": "lr", "type": "continuous", "domain":
                         (.01, .001)},
@@ -208,7 +210,7 @@ class MyModel():
         self.train = train
 
     def unpacker(self, x):
-        """"""
+        """unpacks values"""
         evaluation = self.train(lr=float(x[:, 0]),
                                 dr=float(x[:, 1]),
                                 batch_size=int(x[:, 2]),
@@ -222,7 +224,7 @@ class MyModel():
         return evaluation[0]
 
     def my_model(self):
-        """"""
+        """drives my model with chosen values"""
         opt_hyper_p = GPyOpt.methods.BayesianOptimization(f=self.unpacker,
                                                           domain=self.bounds,
                                                           maximize=False,
