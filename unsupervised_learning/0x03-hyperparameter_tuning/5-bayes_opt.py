@@ -38,7 +38,7 @@ class BayesianOptimization():
         with np.errstate(divide="warn"):
             Z = imp / sigma
             ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
-            ei[sigma == 0.0] = 0.0
+            ei[np.isclose(sigma, 0.0)] = 0.0
         X_next = self.X_s[(np.argmax(ei, axis=0))]
         return X_next, ei
 
