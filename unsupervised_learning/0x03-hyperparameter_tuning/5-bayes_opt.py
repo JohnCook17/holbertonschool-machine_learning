@@ -49,20 +49,20 @@ class BayesianOptimization():
             Y_next = self.f(X_next)
             if np.isin(X_next, self.gp.X):
                 if self.minimize:
-                    Y_opt = np.min(self.gp.Y)
+                    Y_opt = np.min(self.gp.Y, keepdims=True)
                     X_opt = self.gp.X[np.argmin(self.gp.Y)]
-                    return X_opt, Y_opt
+                    return X_opt, Y_opt[0]
                 else:
-                    Y_opt = np.max(self.gp.Y)
+                    Y_opt = np.max(self.gp.Y, keepdims=True)
                     X_opt = self.gp.X[np.argmax(self.gp.Y)]
-                    return X_opt, Y_opt
+                    return X_opt, Y_opt[0]
 
             self.gp.update(X_next, Y_next)
         if self.minimize:
-            Y_opt = np.min(self.gp.Y)
+            Y_opt = np.min(self.gp.Y, keepdims=True)
             X_opt = self.gp.X[np.argmin(self.gp.Y)]
-            return X_opt, Y_opt
+            return X_opt, Y_opt[0]
         else:
-            Y_opt = np.max(self.gp.Y)
+            Y_opt = np.max(self.gp.Y, keepdims=True)
             X_opt = self.gp.X[np.argmax(self.gp.Y)]
-            return X_opt, Y_opt
+            return X_opt, Y_opt[0]
