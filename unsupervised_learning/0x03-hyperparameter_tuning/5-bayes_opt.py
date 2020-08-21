@@ -43,28 +43,26 @@ class BayesianOptimization():
         return X_next, ei
 
     def optimize(self, iterations=100):
-        """"""
+        """optimizes X based on best Y"""
         for i in range(iterations):
-            print(i)
             X_next, ei = self.acquisition()
             Y_next = self.f(X_next)
-            print(X_next, "\n", self.X_s)
-            if X_next == self.X_s.any():
+            if np.isin(X_next, self.gp.X):
                 if self.minimize:
-                    return np.min(self.X_s), np.min(ei)
+                    Y_opt = np.min(self.gp.Y)
+                    X_opt = self.gp.X[np.argmin(self.gp.Y)]
+                    return X_opt, Y_opt
                 else:
-                    return np.max(self.X_s), np.max(ei)
-
+                    Y_opt = np.max(self.gp.Y)
+                    X_opt = self.gp.X[np.argmax(self.gp.Y)]
+                    return X_opt, Y_opt
 
             self.gp.update(X_next, Y_next)
-            # use expected improvment to find next best point, get next best point, 
-            # then get new y value, run the black box function to get y next so f,
-            # sample f as little as possible,
-            # update gp
-            # if in X_s stop early
-            # pick min or max y and coresponding x
         if self.minimize:
-            return np.min(self.X_s), np.min(ei)
+            Y_opt = np.min(self.gp.Y)
+            X_opt = self.gp.X[np.argmin(self.gp.Y)]
+            return X_opt, Y_opt
         else:
-            return np.max(self.X_s), np.max(ei)
-
+            Y_opt = np.max(self.gp.Y)
+            X_opt = self.gp.X[np.argmax(self.gp.Y)]
+            return X_opt, Y_opt
