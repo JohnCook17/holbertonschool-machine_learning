@@ -8,14 +8,12 @@ import tensorflow.keras as K
 
 if __name__ != "__main__":
 
-    def train(patience,
-              epochs,
-              lr,
+    def train(lr,
+              dr,
               batch_size,
               fc_size0,
               fc_size1,
               fc_size2,
-              iteration,
               toy):
         """"""
 
@@ -40,12 +38,20 @@ if __name__ != "__main__":
         df = "channels_last"
         # call backs
         save_best = K.callbacks.ModelCheckpoint(filepath="model_checkpoint_" +
-                                                str(iteration) + ".hdf5",
+                                                + "lr" + str(lr) + "_" +
+                                                + "dr" + str(dr) + "_" +
+                                                + "fc_size0" +
+                                                str(fc_size0) + "_" +
+                                                + "fc_size1" +
+                                                str(fc_size1) + "_" +
+                                                + "fc_size2" +
+                                                str(fc_size2) + "_" +
+                                                ".hdf5",
                                                 monitor="val_loss",
                                                 verbose=1,
                                                 save_best_only=True)
         early_stop = K.callbacks.EarlyStopping(monitor="val_loss",
-                                               patience=patience
+                                               patience=5
                                                )
         learning_rate_0 = K.callbacks.LearningRateScheduler(learning_rate,
                                                             verbose=1
@@ -130,17 +136,17 @@ if __name__ != "__main__":
                                activation="relu",
                                kernel_initializer=K.initializers.he_normal()
                                )(inputs)
-        layer = K.layers.Dropout(0.5)(layer)
+        layer = K.layers.Dropout(dr)(layer)
         layer = K.layers.Dense(units=fc_size1,
                                activation="relu",
                                kernel_initializer=K.initializers.he_normal()
                                )(layer)
-        # D_1 = K.layers.Dropout(0.5)(FC_1)
+        layer = K.layers.Dropout(dr)(layer)
         layer = K.layers.Dense(units=fc_size2,
                                activation="relu",
                                kernel_initializer=K.initializers.he_normal()
                                )(layer)
-        # layer = K.layers.Dropout()(layer)
+        layer = K.layers.Dropout(dr)(layer)
         outputs = K.layers.Dense(units=10,
                                  activation="softmax",
                                  kernel_initializer=K.initializers.he_normal()
@@ -154,7 +160,7 @@ if __name__ != "__main__":
         history = model.fit(X,
                             Y,
                             validation_data=(X_test, Y_test),
-                            epochs=epochs,
+                            epochs=100,
                             verbose=True,
                             batch_size=batch_size,
                             shuffle=True,
@@ -185,14 +191,11 @@ class MyModel():
     """"""
     def __init__(self):
         """"""
-        self.iteration = 0
         # set patience to same, epochs too
-        self.bounds = [{"name": "patience", "type": "continuous", "domain":
-                        (1, 100)},
-                       {"name": "epochs", "type": "continuous", "domain":
-                        (1, 10)},
-                       {"name": "lr", "type": "continuous", "domain":
-                        (.001, .0000001)},
+        self.bounds = [{"name": "lr", "type": "continuous", "domain":
+                        (.001, .0001)},
+                       {"name": "dr", "type": "continuous", "domain":
+                        (.1, .9)},
                        {"name": "batch_size", "type": "discrete", "domain":
                         (32, 64, 128, 256)},
                        {"name": "fc_size0", "type": "discrete", "domain":
@@ -206,16 +209,16 @@ class MyModel():
 
     def unpacker(self, x):
         """"""
-        evaluation = self.train(patience=float(x[:, 0]),
-                                epochs=int(x[:, 1]),
-                                lr=float(x[:, 2]),
-                                batch_size=int(x[:, 3]),
-                                fc_size0=int(x[:, 4]),
-                                fc_size1=int(x[:, 5]),
-                                fc_size2=int(x[:, 6]),
-                                iteration=self.iteration,
+        evaluation = self.train(lr=float(x[:, 0]),
+                                dr=float(x[:, 1]),
+                                batch_size=int(x[:, 2]),
+                                fc_size0=int(x[:, 3]),
+                                fc_size1=int(x[:, 4]),
+                                fc_size2=int(x[:, 5]),
                                 toy=True)  # set to False to train real model
+        print("\n\n======================")
         print(evaluation)
+        print("======================\n\n")
         return evaluation[0]
 
     def my_model(self):
@@ -227,5 +230,4 @@ class MyModel():
         opt_hyper_p.run_optimization(max_iter=1,
                                      verbosity=True,
                                      report_file="bayes_opt.txt")
-        # opt_hyper_p.plot_acquisition()
         opt_hyper_p.plot_convergence()
