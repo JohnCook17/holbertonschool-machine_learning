@@ -38,13 +38,13 @@ if __name__ != "__main__":
         df = "channels_last"
         # call backs
         save_best = K.callbacks.ModelCheckpoint(filepath="model_checkpoint_" +
-                                                + "lr" + str(lr) + "_" +
-                                                + "dr" + str(dr) + "_" +
-                                                + "fc_size0" +
+                                                "lr" + str(lr) + "_" +
+                                                "dr" + str(dr) + "_" +
+                                                "fc_size0" +
                                                 str(fc_size0) + "_" +
-                                                + "fc_size1" +
+                                                "fc_size1" +
                                                 str(fc_size1) + "_" +
-                                                + "fc_size2" +
+                                                "fc_size2" +
                                                 str(fc_size2) + "_" +
                                                 ".hdf5",
                                                 monitor="val_loss",
@@ -193,9 +193,9 @@ class MyModel():
         """"""
         # set patience to same, epochs too
         self.bounds = [{"name": "lr", "type": "continuous", "domain":
-                        (.001, .0001)},
+                        (.01, .001)},
                        {"name": "dr", "type": "continuous", "domain":
-                        (.1, .9)},
+                        (.1, .3)},
                        {"name": "batch_size", "type": "discrete", "domain":
                         (32, 64, 128, 256)},
                        {"name": "fc_size0", "type": "discrete", "domain":
