@@ -221,6 +221,13 @@ class MyModel():
         print("\n\n======================")
         print(evaluation)
         print("======================\n\n")
+        print("values used")
+        print("learning rate:", x[:, 0])
+        print("drop out rate:", x[:, 1])
+        print("batch size:", x[:, 2])
+        print("fully connected layer 0:", x[:, 3])
+        print("fully connected layer 1:", x[:, 4])
+        print("fully connected layer 2:", x[:, 5])
         return evaluation[0]
 
     def my_model(self):
