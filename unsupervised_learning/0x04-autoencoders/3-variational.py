@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """variational auto encoder"""
-# import tensorflow.keras as keras
-import tensorflow as tf
-from tensorflow import keras
+import tensorflow.keras as keras
+# import tensorflow as tf
+# from tensorflow import keras
 
 
 class KLDivergenceLayer(keras.layers.Layer):
@@ -58,7 +58,6 @@ def encoder(input_dims, hidden_layers, latent_dims):
                                      mean,
                                      log_var])
     encoder_m.compile(optimizer="adam", loss="binary_crossentropy")
-    encoder_m.summary()
     return encoder_m
 
 

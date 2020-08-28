@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Convolutional auto encoder"""
-# import tensorflow.keras as keras
-import tensorflow as tf
-from tensorflow import keras
+import tensorflow.keras as keras
+# import tensorflow as tf
+# from tensorflow import keras
 
 
 def std_layer_encode(inputs, filter_size):
@@ -34,7 +34,6 @@ def encoder(input_dims, filters, latent_dims):
 
     model = keras.Model(inputs=inputs, outputs=encode_layer)
     model.compile(optimizer="adam", loss="binary_crossentropy")
-    model.summary()
     return model
 
 
@@ -56,7 +55,6 @@ def decoder(input_dims, filters, latent_dims):
 
     model = keras.Model(inputs=inputs, outputs=last)
     model.compile(optimizer="adam", loss="binary_crossentropy")
-    model.summary()
     return model
 
 

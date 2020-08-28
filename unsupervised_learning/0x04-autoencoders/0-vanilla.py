@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """vanilla auto encoder"""
-# import tensorflow.keras as keras
-import tensorflow as tf
-from tensorflow import keras
+import tensorflow.keras as keras
+# import tensorflow as tf
+# from tensorflow import keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
