@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Convolutional auto encoder"""
 import tensorflow.keras as keras
-# import tensorflow as tf
-# from tensorflow import keras
 
 
 def std_layer_encode(inputs, filter_size):

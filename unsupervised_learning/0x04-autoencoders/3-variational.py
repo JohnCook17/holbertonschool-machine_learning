@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """variational auto encoder"""
 import tensorflow.keras as keras
-# import tensorflow as tf
-# from tensorflow import keras
 
 
 class KLDivergenceLayer(keras.layers.Layer):
