@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""a basic RNN Cell"""
 import numpy as np
 
 
