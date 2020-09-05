@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""Bidirectional RNN forward pass"""
 import numpy as np
 
 
 def bi_rnn(bi_cell, X, h_0, h_t):
-    """"""
+    """The bidirectional RNN forward pass function"""
     hf = h_0
     hb = h_t
     h_ret = []
