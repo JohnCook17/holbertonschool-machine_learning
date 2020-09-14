@@ -8,6 +8,14 @@ import matplotlib.pyplot as plt
 tf.enable_eager_execution()
 
 
+def reset_keras():
+    """resets keras session"""
+    sess = keras.backend.get_session()
+    keras.backend.clear_session()
+    sess.close()
+    
+
+
 def make_data_split(look_back=60):
     my_data = np.genfromtxt("clean_data_t-1.csv", delimiter=",")
     my_data = my_data[np.newaxis]
@@ -28,25 +36,23 @@ def make_data_split(look_back=60):
 def forecast():
     """"""
     # get data set
+    reset_keras()
     train, y, test, time_stamps_train, time_staps_test = make_data_split(60)
+    print(train, y)
     data_set = tf.data.Dataset.from_tensor_slices((train, y)).batch(1)
-    test_data_set = data_set  # tf.data.Dataset.from_tensor_slices((test)).batch(1)
     input_shape = train.shape
     # build model
     print("=================== making model ================================")
     print(train.shape, y.shape)
     model = keras.Sequential()
-    model.add(keras.layers.LSTM(4, input_shape=(input_shape), activation="relu"))
-    model.add(keras.layers.Dense(4, activation="relu"))
-    # model.add(keras.layers.Dense(input_shape[2]))
+    model.add(keras.layers.InputLayer(input_shape=input_shape))
+    model.add(keras.layers.LSTM(4, activation="relu"))
+    model.add(keras.layers.Dense(1, "relu"))
     # compile model
-    model.compile(loss="mse", optimizer=tf.train.AdamOptimizer(learning_rate=0.05))
-    
-    model.fit(x=data_set.repeat(), steps_per_epoch=1, epochs=10, batch_size=1, verbose=True, shuffle=False)
-    res = model.predict(data_set, steps=1, verbose=True)
-    print(res)
-    res = np.sum(res)
-    print(res)
+    model.compile(loss="mse", optimizer=tf.train.AdamOptimizer(learning_rate=0.01))
+    model.fit(x=data_set.repeat(), steps_per_epoch=1, epochs=2, batch_size=1, verbose=True, shuffle=False)
+    model.summary()
+    print(model.predict(data_set, steps=1, verbose=True))
 
 
 forecast()
