@@ -4,6 +4,8 @@
 
 def determinant(matrix):
     """Finds the determinant of a matrix"""
+    if not matrix:
+        raise TypeError("matrix must be a list of lists")
     if not isinstance(matrix, list) or not matrix or not isinstance(matrix[0],
                                                                     list):
         raise TypeError("matrix must be a list of lists")
@@ -12,6 +14,8 @@ def determinant(matrix):
             return matrix[0][0]
         elif matrix == [[]]:
             return 1
+    if not matrix[0]:
+        raise ValueError("matrix must be a square matrix")
     if len(matrix) != len(matrix[0]):
         raise ValueError("matrix must be a square matrix")
     # checks for if list of list checks if matrix is 0x0, or if the
