@@ -4,6 +4,7 @@
 
 def minor(matrix):
     """finds the minor of a matrix"""
+    # checks types
     if not matrix:
         raise TypeError("matrix must be a list of lists")
     if not isinstance(matrix, list) or not matrix:
@@ -11,6 +12,7 @@ def minor(matrix):
     for element in matrix:
         if not isinstance(element, list):
             raise TypeError("matrix must be a list of lists")
+    # checks shape
     if len(matrix) == 1:
         if len(matrix[0]) == 1:
             return [[1]]
@@ -23,6 +25,22 @@ def minor(matrix):
 
     def determinant(matrix):
         """Finds the determinant of a matrix"""
+        if not matrix:
+            raise TypeError("matrix must be a list of lists")
+        if not isinstance(matrix, list) or not matrix:
+            raise TypeError("matrix must be a list of lists")
+        for element in matrix:
+            if not isinstance(element, list):
+                raise TypeError("matrix must be a list of lists")
+        if len(matrix) == 1:
+            if len(matrix[0]) == 1:
+                return matrix[0][0]
+            elif matrix == [[]]:
+                return 1
+        if not matrix[0]:
+            raise ValueError("matrix must be a square matrix")
+        if len(matrix) != len(matrix[0]):
+            raise ValueError("matrix must be a square matrix")
         t = 0
         for index in range(len(matrix)):
             arr = [[v for row, v in enumerate(line) if row != index]
