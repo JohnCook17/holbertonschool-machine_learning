@@ -6,9 +6,11 @@ def determinant(matrix):
     """Finds the determinant of a matrix"""
     if not matrix:
         raise TypeError("matrix must be a list of lists")
-    if not isinstance(matrix, list) or not matrix or not isinstance(matrix[0],
-                                                                    list):
+    if not isinstance(matrix, list) or not matrix:
         raise TypeError("matrix must be a list of lists")
+    for element in matrix:
+        if not isinstance(element, list):
+            raise TypeError("matrix must be a list of lists")
     if len(matrix) == 1:
         if len(matrix[0]) == 1:
             return matrix[0][0]
