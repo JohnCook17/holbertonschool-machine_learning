@@ -97,6 +97,6 @@ def adjugate(matrix):
         return cofactors
 
     cofactors = cofactor(matrix)
-    adjugate = list(zip(*cofactors))
+    adjugate = [list(i) for i in zip(*cofactors)]
 
     return adjugate
