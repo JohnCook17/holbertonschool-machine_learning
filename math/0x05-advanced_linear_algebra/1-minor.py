@@ -38,9 +38,9 @@ def minor(matrix):
             elif matrix == [[]]:
                 return 1
         if not matrix[0]:
-            raise ValueError("matrix must be a square matrix")
+            raise ValueError("matrix must be a non-empty square matrix")
         if len(matrix) != len(matrix[0]):
-            raise ValueError("matrix must be a square matrix")
+            raise ValueError("matrix must be a non-empty square matrix")
         t = 0
         for index in range(len(matrix)):
             arr = [[v for row, v in enumerate(line) if row != index]
