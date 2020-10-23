@@ -7,6 +7,9 @@ def definiteness(matrix):
     """Finds the definiteness of a matrix"""
     if not isinstance(matrix, np.ndarray):
         raise TypeError("matrix must be a numpy.ndarray")
+    for element in matrix:
+        if not isinstance(element, np.ndarray):
+            raise TypeError("matrix must be a numpy.ndarray")
     if len(matrix.shape) != 2:
         return None
     if matrix.shape[0] != matrix.shape[1]:
