@@ -121,5 +121,5 @@ def inverse(matrix):
         inv = divide_matrix_elementwise(adj, det)
 
         return inv
-    except Exception as e:
+    except ZeroDivisionError:
         return None
