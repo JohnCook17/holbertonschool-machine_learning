@@ -16,14 +16,16 @@ def definiteness(matrix):
         return None
 
     # print(np.linalg.eigvals(matrix))
-
-    if np.all((np.linalg.eigvals(matrix) > 0)):
-        return "Positive definite"
-    elif np.all(np.linalg.eigvals(matrix) < 0):
-        return "Negative definite"
-    elif np.all((np.linalg.eigvals(matrix) >= 0)):
-        return "Positive semi-definite"
-    elif np.all((np.linalg.eigvals(matrix) <= 0)):
-        return "Negative semi-definite"
-    else:
-        return "Indefinite"
+    try:
+        if np.all((np.linalg.eigvals(matrix) > 0)):
+            return "Positive definite"
+        elif np.all(np.linalg.eigvals(matrix) < 0):
+            return "Negative definite"
+        elif np.all((np.linalg.eigvals(matrix) >= 0)):
+            return "Positive semi-definite"
+        elif np.all((np.linalg.eigvals(matrix) <= 0)):
+            return "Negative semi-definite"
+        else:
+            return "Indefinite"
+    except ZeroDivisionError:
+        return None
