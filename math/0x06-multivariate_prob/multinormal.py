@@ -21,7 +21,7 @@ class MultiNormal():
                 raise TypeError("X must be a 2D numpy.ndarray")
             if len(X.shape) != 2:
                 raise TypeError("X must be a 2D numpy.ndarray")
-            if X.shape[0] < 2:
+            if X.shape[1] < 2:
                 raise ValueError("X must contain multiple data points")
 
             X = X.T
