@@ -38,7 +38,7 @@ class MultiNormal():
         self.mean, self.cov = mean_cov(data)
 
     def pdf(self, x):
-        """"""
+        """finds the pdf of a multivariate normal distribution"""
         if not isinstance(x, np.ndarray):
             raise TypeError("x must be a numpy.ndarray")
         d = x.shape[0]
