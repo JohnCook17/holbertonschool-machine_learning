@@ -36,3 +36,20 @@ class MultiNormal():
             return mean, c.squeeze()
 
         self.mean, self.cov = mean_cov(data)
+
+    def pdf(self, x):
+        """"""
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must be a numpy.ndarray")
+        d = x.shape[0]
+        if len(x.shape) != 2 or x.shape != (d, 1):
+            raise ValueError("x must have the shape ({d}, 1)".format(d))
+
+        mean = self.mean[0]
+        cov = self.cov
+        # print(mean, "\n", cov, "\n")
+
+        pdf = (1 / np.sqrt(((2 * np.pi) ** d) * np.linalg.det(cov)) *
+               np.exp(-1/2 * (x - mean).T * np.linalg.inv(cov) * (x - mean)))
+        pdf = np.sum(pdf) / d
+        return pdf
