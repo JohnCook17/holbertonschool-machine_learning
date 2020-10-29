@@ -16,4 +16,4 @@ def pca(X, var=0.95):
     # print(V_idx.shape)
     V_idx = len(V_idx)
     # print(V[:, :V_idx].shape)
-    return V[:, :V_idx] * -1
+    return V[:, :V_idx] * -1.
