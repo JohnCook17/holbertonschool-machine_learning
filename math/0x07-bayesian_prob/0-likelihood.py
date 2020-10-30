@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""The likelihood, bayesian"""
 import numpy as np
 
 
 def likelihood(x, n, P):
-    """"""
+    """The likelyhood of an event"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) and x < 0:

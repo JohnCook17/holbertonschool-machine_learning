@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""The likelihood, intersection, marginal, and posterior bayesian"""
 import numpy as np
 
 
 def likelihood(x, n, P):
-    """"""
+    """The likelyhood of an event"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) and x < 0:
@@ -23,7 +23,7 @@ def likelihood(x, n, P):
 
 
 def intersection(x, n, P, Pr):
-    """"""
+    """The Intersection"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) and x < 0:
@@ -48,7 +48,7 @@ def intersection(x, n, P, Pr):
 
 
 def marginal(x, n, P, Pr):
-    """"""
+    """The Marginal or P(B) or Evidence"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) and x < 0:
@@ -73,7 +73,7 @@ def marginal(x, n, P, Pr):
 
 
 def posterior(x, n, P, Pr):
-    """"""
+    """The posterior or P(A|B)"""
     if not isinstance(n, int) or n < 1:
         raise ValueError("n must be a positive integer")
     if not isinstance(x, int) and x < 0:
