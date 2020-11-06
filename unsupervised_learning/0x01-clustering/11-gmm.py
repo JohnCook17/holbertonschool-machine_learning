@@ -7,7 +7,7 @@ def gmm(X, k):
     """The gaussian mixture model"""
     gauss_mix = sklearn.mixture.GaussianMixture(n_components=k).fit(X)
 
-    pi = gauss_mix.predict_proba(X)
+    pi = gauss_mix.weights_
     m = gauss_mix.means_
     S = gauss_mix.covariances_
     clss = gauss_mix.predict(X)
