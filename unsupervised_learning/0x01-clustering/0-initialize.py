@@ -11,4 +11,4 @@ def initialize(X, k):
         data_max = np.max(X, axis=0)
         return np.random.uniform(low=data_min, high=data_max, size=(k, d))
     except Exception as e:
-        return None, None
+        return None
