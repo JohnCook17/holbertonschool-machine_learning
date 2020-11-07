@@ -16,12 +16,13 @@ def initialize(X, k):
 
 def kmeans(X, k, iterations=1000):
     """k-means clustering"""
-    centroids = X[:k]
+    centroids = X[k:]
 
     for i in range(iterations):
 
         clss = np.argmin(((X[:, :, None] - centroids.T[None, :, :, ])
                           ** 2).sum(axis=1), axis=1)
+        centroids = initialize(X, k)
         new_centroids = np.array([X[clss == j, :].mean(axis=0)
                                   for j in range(k)])
 
