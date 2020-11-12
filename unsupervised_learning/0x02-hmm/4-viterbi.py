@@ -14,30 +14,25 @@ def viterbi(Observation, Emission, Transition, Initial):
     M = Transition.shape[1]
 
     omega = np.zeros((T, M))
-    omega[0, :, np.newaxis] = (np.log(Emission[:, Observation[0]] *
-                                      Initial.T)).T
+    omega[0, :, np.newaxis] = (Emission[:, Observation[0]] * Initial.T).T
 
     prev = np.zeros((T - 1, M))
 
     for t in range(1, T):
         for j in range(M):
-            prob = (omega[t - 1] + np.log(Transition[:, j]) +
-                    np.log(Emission[j, Observation[t]]))
-
+            prob = np.multiply(omega[t - 1], Transition[:, j])
+            omega[t, j] = np.max(prob) * Emission[j, Observation[t]]
             prev[t - 1, j] = np.argmax(prob)
-
-            omega[t, j] = np.max(prob)
 
     S = np.zeros(T)
 
     last_state = np.argmax(omega[T - 1, :])
 
-    S[0] = last_state
+    S[-1] = last_state
 
     back_indx = 1
     for i in range(T - 2, -1, -1):
-        S[back_indx] = prev[i, int(last_state)]
+        S[i] = prev[i, int(last_state)]
         last_state = prev[i, int(last_state)]
-        back_indx += 1
 
-    return S[::-1], np.exp(np.max(omega[T - 1, :]))  # np.exp to rescale values
+    return S, np.max(omega[T - 1, :])
