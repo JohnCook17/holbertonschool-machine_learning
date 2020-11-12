@@ -32,7 +32,7 @@ def viterbi(Observation, Emission, Transition, Initial):
 
     back_indx = 1
     for i in range(T - 2, -1, -1):
-        S[i] = prev[i, int(last_state)]
+        S[i] = int(prev[i, int(last_state)])
         last_state = prev[i, int(last_state)]
 
-    return S, np.max(omega[T - 1, :])
+    return S.astype("int32").tolist(), np.max(omega[T - 1, :])
