@@ -21,6 +21,7 @@ def backward(Observation, Emission, Transition, Initial):
                            Emission[:, Observation[t + 1]]).
                           dot(Transition[j, :]))
 
-    likelihood = np.sum([beta[:, 0]])  # might be inaccurate
+    likelihood = np.sum(np.sum(Initial.T * Emission[:, Observation[0]]
+                               * beta[:, 0]))
 
     return likelihood, beta
