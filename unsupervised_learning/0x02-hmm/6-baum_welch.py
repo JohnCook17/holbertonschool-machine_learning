@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""The Baum-Welch Algorithm"""
 import numpy as np
 
 
@@ -49,7 +49,7 @@ def backward(Observation, Emission, Transition, Initial):
 
 
 def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
-    """"""
+    """An implementation of the Baum-Welch algorithm"""
     # a = Transition (5, 5)
     # b = Emission shape = (5, 6)
     # V = Observation shape = (365,)
@@ -66,14 +66,19 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         xi = np.zeros((M, M, T - 1))
         for t in range(T - 1):
-            denominator = np.dot(np.dot(alpha[t, :].T, Transition) * Emission[:, Observations[t + 1]].T, beta[t + 1, :])
+            denominator = np.dot(np.dot(alpha[t, :].T, Transition) *
+                                 Emission[:, Observations[t + 1]].T,
+                                 beta[t + 1, :])
             for i in range(M):
-                numerator = alpha[t, i] * Transition[i, :] * Emission[:, Observations[t + 1]].T * beta[t + 1, :]
+                numerator = (alpha[t, i] * Transition[i, :] *
+                             Emission[:, Observations[t + 1]].T *
+                             beta[t + 1, :])
                 xi[i, :, t] = numerator / denominator
         gamma = np.sum(xi, axis=1)
         Transition = np.sum(xi, 2) / np.sum(gamma, axis=1).reshape((-1, 1))
 
-        gamma = np.hstack((gamma, np.sum(xi[:, :, T - 2], axis=0).reshape((-1, 1))))
+        gamma = np.hstack((gamma,
+                           np.sum(xi[:, :, T - 2], axis=0).reshape((-1, 1))))
 
         K = Emission.shape[1]
         denominator = np.sum(gamma, axis=1)
@@ -82,7 +87,8 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         Emission = np.divide(Emission, denominator.reshape((-1, 1)))
 
-        if np.isclose(old_T, Transition).any() or np.isclose(old_E, Emission).any():
+        if ((np.isclose(old_T, Transition).any() or
+             np.isclose(old_E, Emission).any())):
             return Transition, Emission
 
     return Transition, Emission
