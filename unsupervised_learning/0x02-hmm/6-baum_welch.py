@@ -87,8 +87,9 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         Emission = np.divide(Emission, denominator.reshape((-1, 1)))
 
-        if ((np.isclose(old_T, Transition).any() or
+        """if ((np.isclose(old_T, Transition).any() or
              np.isclose(old_E, Emission).any())):
-            return Transition, Emission
+            print(":)")
+            return Transition, Emission"""
 
     return Transition, Emission
