@@ -58,14 +58,17 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
     T = Observations.shape[0]
 
     for n in range(iterations):
-        _, alpha = forward(Observations, Emission, Transition, Initial)
-        _, beta = backward(Observations, Emission, Transition, Initial)
+        alpha = forward(Observations, Emission, Transition, Initial)[1].T
+        beta = backward(Observations, Emission, Transition, Initial)[1].T
+
+        old_T = Transition
+        old_E = Emission
 
         xi = np.zeros((M, M, T - 1))
         for t in range(T - 1):
-            denominator = np.dot(np.dot(alpha[:, t], Transition) * Emission[:, Observations[t + 1]], beta[:, t + 1])
+            denominator = np.dot(np.dot(alpha[t, :].T, Transition) * Emission[:, Observations[t + 1]].T, beta[t + 1, :])
             for i in range(M):
-                numerator = alpha[i, t] * Transition[:, i] * Emission[:, Observations[t + 1]] * beta[:, t + 1]
+                numerator = alpha[t, i] * Transition[i, :] * Emission[:, Observations[t + 1]].T * beta[t + 1, :]
                 xi[i, :, t] = numerator / denominator
         gamma = np.sum(xi, axis=1)
         Transition = np.sum(xi, 2) / np.sum(gamma, axis=1).reshape((-1, 1))
@@ -79,4 +82,7 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         Emission = np.divide(Emission, denominator.reshape((-1, 1)))
 
-        return Transition, Emission
+        if np.isclose(old_T, Transition).any() or np.isclose(old_E, Emission).any():
+            return Transition, Emission
+
+    return Transition, Emission
