@@ -11,9 +11,10 @@ class GaussianProcess():
         self.Y = Y_init
         self.l = l
         self.sigma_f = sigma_f
-        self.K = self.kernel(self.X, self.Y)
+        self.K = self.kernel(self.X, self.X)
 
     def kernel(self, X1, X2):
         """The Radial Basis Function to get the kernel"""
-        return ((self.sigma_f ** 2) *
-                np.exp(-(1 / (2 * (self.l ** 2))) * ((X1 - X2).T * (X1 - X2))))
+        sqdist = (np.sum(X1**2, 1).reshape(-1, 1) +
+                  np.sum(X2**2, 1) - 2 * np.dot(X1, X2.T))
+        return self.sigma_f ** 2 * np.exp(-0.5 / self.l ** 2 * sqdist)
