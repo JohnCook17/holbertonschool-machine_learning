@@ -20,18 +20,16 @@ class BayesianOptimization():
     def acquisition(self):
         """"""
         mu, sigma = self.gp.predict(self.X_s)
-        mu_sample, _ = self.gp.predict(self.gp.X)
 
-        # sigma = sigma.reshape(-1, 1)
-
-        if self.minimize:
+        if self.minimize is True:
             mu_sample_opt = np.min(self.gp.Y)
         else:
             mu_sample_opt = np.max(self.gp.Y)
 
-        imp = mu - mu_sample_opt - self.xsi
-        Z = imp / sigma
-        ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
-        ei[ei == 0.0] = 0.0
-
-        return None, ei
+        with np.errstate(divide="warn"):
+            imp = mu_sample_opt - mu - self.xsi
+            Z = imp / sigma
+            ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
+            ei[ei == 0.0] = 0.0
+        X = self.X_s[np.argmax(ei, axis=0)]
+        return X, ei
