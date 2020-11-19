@@ -37,6 +37,19 @@ class BayesianOptimization():
     def optimize(self, iterations=100):
         """"""
         for _ in range(iterations):
-            X, ei = self.acquisition()
-            self.gp.update(X, self.f(X))
-        return X, self.f(X)
+            X, _ = self.acquisition()
+            Y = self.f(X)
+            if np.isin(X, self.gp.X):
+                if self.minimize:
+                    Y_opt = np.min(self.gp.Y, keepdims=True)
+                    return self.gp.X[np.argmin(self.gp.Y)], Y_opt
+                else:
+                    Y_opt = np.max(self.gp.Y)
+                    return self.gp.X[np.argmax(self.gp.Y)]
+            self.gp.update(X, Y)
+        if self.minimize:
+            Y_opt = np.min(self.gp.Y)
+            return self.gp.X[np.argmin(self.gp.Y)], Y_opt
+        else:
+            Y_opt = np.max(self.gp.Y)
+            return self.gp.X[np.argmax(self.gp.Y)], Y_opt
