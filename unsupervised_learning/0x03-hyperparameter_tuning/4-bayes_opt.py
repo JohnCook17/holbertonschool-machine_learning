@@ -18,7 +18,7 @@ class BayesianOptimization():
         self.minimize = minimize
 
     def acquisition(self):
-        """"""
+        """Acquires X_next, and Expectation improvement"""
         mu, sigma = self.gp.predict(self.X_s)
 
         if self.minimize is True:
