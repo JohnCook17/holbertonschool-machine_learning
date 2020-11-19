@@ -35,7 +35,7 @@ class BayesianOptimization():
         return X, ei
 
     def optimize(self, iterations=100):
-        """"""
+        """The optimization step"""
         for _ in range(iterations):
             X, _ = self.acquisition()
             Y = self.f(X)
