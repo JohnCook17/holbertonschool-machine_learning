@@ -42,14 +42,14 @@ class BayesianOptimization():
             if np.isin(X, self.gp.X):
                 if self.minimize:
                     Y_opt = np.min(self.gp.Y, keepdims=True)
-                    return self.gp.X[np.argmin(self.gp.Y)], Y_opt
+                    return self.gp.X[np.argmin(self.gp.Y)], Y_opt[0]
                 else:
                     Y_opt = np.max(self.gp.Y)
-                    return self.gp.X[np.argmax(self.gp.Y)]
+                    return self.gp.X[np.argmax(self.gp.Y)], Y_opt[0]
             self.gp.update(X, Y)
         if self.minimize:
             Y_opt = np.min(self.gp.Y)
-            return self.gp.X[np.argmin(self.gp.Y)], Y_opt
+            return self.gp.X[np.argmin(self.gp.Y)], Y_opt[0]
         else:
             Y_opt = np.max(self.gp.Y)
-            return self.gp.X[np.argmax(self.gp.Y)], Y_opt
+            return self.gp.X[np.argmax(self.gp.Y)], Y_opt[0]
