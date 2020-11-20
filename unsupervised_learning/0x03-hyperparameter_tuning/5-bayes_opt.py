@@ -30,7 +30,7 @@ class BayesianOptimization():
             imp = mu_sample_opt - mu - self.xsi
             Z = imp / sigma
             ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
-            ei[ei == 0.0] = 0.0
+            ei = np.where(np.isclose(ei, 0.0, atol=1.e-25), 0.0, ei)
         X = self.X_s[np.argmax(ei, axis=0)]
         return X, ei
 
