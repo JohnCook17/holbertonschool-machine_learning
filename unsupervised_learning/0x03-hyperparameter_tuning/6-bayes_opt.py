@@ -4,13 +4,14 @@ import tensorflow.keras as K
 from GPyOpt.methods import BayesianOptimization
 import pickle
 import os
+import numpy as np
 
 
 class my_model():
-    """"""
+    """A model bassed on xception"""
 
     def make_model(self, param):
-        """"""
+        """makes the model"""
         self.lr = param[0][0]
         dr = param[0][1]
         layer_units0 = param[0][2]
@@ -19,6 +20,7 @@ class my_model():
 
         def learning_rate(epoch):
             """The learning rate scheduler"""
+            self.lr = self.lr / 1.00000001
             return self.lr
 
         """Do not touch from here..."""
@@ -37,12 +39,17 @@ class my_model():
         # data format
         df = "channels_last"
         # call backs
-        save_best = K.callbacks.ModelCheckpoint(filepath="cifar10.h5",
-                                                monitor="val_acc",
+        save_best = K.callbacks.ModelCheckpoint(filepath="model_lr{:.2f}_dr{:.2f}_l0{}_l1{}_l2{}.h5"
+                                                .format(self.lr,
+                                                        dr,
+                                                        layer_units0,
+                                                        layer_units1,
+                                                        layer_units2),
+                                                monitor="val_loss",
                                                 save_best_only=True,
                                                 )
         early_stop = K.callbacks.EarlyStopping(monitor="val_loss",
-                                               patience=10
+                                               patience=7
                                                )
         learning_rate_0 = K.callbacks.LearningRateScheduler(learning_rate,
                                                             verbose=1
@@ -97,9 +104,9 @@ class my_model():
         # set up new model
         if os.path.exists("X_inputs") and os.path.exists("X_test_inputs"):
             with open("X_inputs", "rb") as X_file:
-                X = X_file
+                X = pickle.load(X_file)
             with open("X_test_inputs", "rb") as X_test_file:
-                X_test = X_test_file
+                X_test = pickle.load(X_test_file)
         else:
             frozen_layers = K.Model(inputs=loaded_model.input,
                                     outputs=loaded_model.layers[-2].output
@@ -128,12 +135,12 @@ class my_model():
                                activation="relu",
                                kernel_initializer=K.initializers.he_normal()
                                )(layer)
-        layer = K.layers.Dropout(dr)(layer)
+        # layer = K.layers.Dropout(dr)(layer)
         layer = K.layers.Dense(units=layer_units2,
                                activation="relu",
                                kernel_initializer=K.initializers.he_normal()
                                )(layer)
-        layer = K.layers.Dropout(dr)(layer)
+        # layer = K.layers.Dropout(dr)(layer)
         outputs = K.layers.Dense(units=10,
                                  activation="softmax",
                                  kernel_initializer=K.initializers.he_normal()
@@ -153,28 +160,36 @@ class my_model():
                       callbacks=[early_stop, learning_rate_0, save_best]
                       )
 
-        val_accuracy = np.max(h.history["val_acc"])
+        val_accuracy = np.min(h.history["val_loss"])
 
         return val_accuracy
 
     def opt(self):
-        """"""
+        """the optimization function"""
         search_space = [
             {"name": "lr", "type": "continuous", "domain": (0.01, 0.001)},
             {"name": "dr", "type": "continuous", "domain": (0.1, 0.3)},
-            {"name": "layer_units0", "type": "discrete", "domain": (32, 64, 128, 256)},
-            {"name": "layer_units1", "type": "discrete", "domain": (32, 64, 128, 256)},
-            {"name": "layer_units2", "type": "discrete", "domain": (32, 64, 128, 256)}
+            {"name": "layer_units0", "type": "discrete", "domain": (32, 64, 128, 256, 512)},
+            {"name": "layer_units1", "type": "discrete", "domain": (32, 64, 128, 256, 512)},
+            {"name": "layer_units2", "type": "discrete", "domain": (32, 64, 128, 256, 512)}
         ]
-        bayesian_opt = BayesianOptimization(self.make_model,
-                                            domain=search_space,
-                                            model_type="GP",
-                                            initial_design_type="random",
-                                            acquisition_type="EI",
-                                            batch_size=1,
-                                            maximize=True,
-                                            verbosity=True
+        my_bayesian_opt = BayesianOptimization(self.make_model,
+                                               domain=search_space,
+                                               model_type="GP",
+                                               initial_design_numdata=1,
+                                               acquisition_type="EI",
+                                               maximize=False,
+                                               verbosity=True
                                             )
+        print("==============================")
+        my_bayesian_opt.run_optimization(max_iter=29,
+                                         report_file="report",
+                                         evaluations_file="evaluation",
+                                         models_file="models")
+        print("PLOTTING")
+        my_bayesian_opt.plot_acquisition()
+        my_bayesian_opt.plot_convergence()
+        print("==============================")
 
 
 def preprocess_data(X, Y):

@@ -18,6 +18,6 @@ if ((os.path.exists("Preprocessed_data_Xs") and
         Y_p = pickle.load(my_file1)
 else:
     X_p, Y_p = preprocess_data(X, Y)
-GPBO.opt()
-model = K.models.load_model('cifar10.h5')
-model.evaluate(X_p, Y_p, batch_size=128, verbose=1)
+gpyopt_bo = GPBO.opt()
+# model = K.models.load_model('cifar10.h5')
+# model.evaluate(X_p, Y_p, batch_size=128, verbose=1)
