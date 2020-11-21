@@ -30,7 +30,8 @@ class BayesianOptimization():
             imp = mu_sample_opt - mu - self.xsi
             Z = imp / sigma
             ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
-            ei[ei == 0.0] = 0
+            # ei = np.where(np.isclose(ei, 0.0), 0.0, ei)
+            ei[ei == 0.0] = 0.0
         X = self.X_s[np.argmax(ei, axis=0)]
         return X, ei
 
@@ -44,7 +45,7 @@ class BayesianOptimization():
                 break
             X_searched.append(X)
             self.gp.update(X, Y)
-        np.delete(self.gp.X[:, -1])
+        self.gp.X = self.gp.X[:-1]
         if self.minimize:
             Y_opt = np.min(self.gp.Y, keepdims=True)
             return self.gp.X[np.argmin(self.gp.Y)], Y_opt[0]
