@@ -30,26 +30,24 @@ class BayesianOptimization():
             imp = mu_sample_opt - mu - self.xsi
             Z = imp / sigma
             ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
-            ei = np.where(np.isclose(ei, 0.0, atol=1.e-25), 0.0, ei)
+            ei = ei[ei == 0.0] = 0
         X = self.X_s[np.argmax(ei, axis=0)]
         return X, ei
 
     def optimize(self, iterations=100):
         """The optimization step"""
+        X_searched = []
         for _ in range(iterations):
             X, _ = self.acquisition()
             Y = self.f(X)
-            if np.isin(X, self.gp.X):
-                if self.minimize:
-                    Y_opt = np.min(self.gp.Y, keepdims=True)
-                    return self.gp.X[np.argmin(self.gp.Y)], Y_opt[0]
-                else:
-                    Y_opt = np.max(self.gp.Y)
-                    return self.gp.X[np.argmax(self.gp.Y)], Y_opt[0]
+            if X in X_searched:
+                break
+            X_searched.append(X)
             self.gp.update(X, Y)
+        np.delete(self.gp.X[:, -1])
         if self.minimize:
-            Y_opt = np.min(self.gp.Y)
+            Y_opt = np.min(self.gp.Y, keepdims=True)
             return self.gp.X[np.argmin(self.gp.Y)], Y_opt[0]
         else:
-            Y_opt = np.max(self.gp.Y)
+            Y_opt = np.max(self.gp.Y, keepdims=True)
             return self.gp.X[np.argmax(self.gp.Y)], Y_opt[0]
