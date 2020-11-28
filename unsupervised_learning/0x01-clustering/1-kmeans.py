@@ -5,6 +5,8 @@ import numpy as np
 
 def initialize(X, k):
     """Initializes for K means given the data X"""
+    if k < 1:
+        return None
     try:
         d = X.shape[1]
         data_min = np.min(X, axis=0)
