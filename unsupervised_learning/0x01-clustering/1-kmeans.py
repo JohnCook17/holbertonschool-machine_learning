@@ -5,9 +5,9 @@ import numpy as np
 
 def initialize(X, k):
     """Initializes for K means given the data X"""
-    if k < 1:
-        return None
     try:
+        if k < 1:
+            return None
         d = X.shape[1]
         data_min = np.min(X, axis=0)
         data_max = np.max(X, axis=0)
