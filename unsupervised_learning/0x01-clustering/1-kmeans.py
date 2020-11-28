@@ -22,14 +22,16 @@ def kmeans(X, k, iterations=1000):
 
         clss = np.argmin(((X[:, :, None] - centroids.T[None, :, :, ])
                           ** 2).sum(axis=1), axis=1)
+
         centroids = initialize(X, k)
-        new_centroids = np.array([X[clss == j, :].mean(axis=0)
+        new_centroids = np.array([X[j, :] ==
+                                  np.random.uniform(np.min(X, axis=0),
+                                  np.max(X, axis=0)(1, X.shape[1]))
+                                  if X[clss == i].size == 0
+                                  else X[clss == j, :].mean(axis=0)
                                   for j in range(k)])
 
-        if np.isnan(centroids).any():
-            centroids = initialize(X, k)
-
-        if (new_centroids == centroids).all():
+        if new_centroids.all() == centroids.all():
             break
         else:
             centroids = new_centroids
