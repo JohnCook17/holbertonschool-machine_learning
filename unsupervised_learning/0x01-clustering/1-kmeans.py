@@ -16,25 +16,33 @@ def initialize(X, k):
         return None
 
 
+def assign_class(X, centroids):
+    """assigns the class"""
+    return np.argmin(((X[:, :, None] - centroids.T[None, :, :, ]) ** 2)
+                     .sum(axis=1), axis=1)
+
+
+def get_centroids(X, k, clss):
+    """gets the centroids"""
+    centroids = [np.random.uniform(np.min(X, axis=0),
+                                   np.max(X, axis=0),
+                                   (1, X.shape[1]))
+                 if np.isclose(np.size(X[clss == j, :]), 0)
+                 else np.mean(X[clss == j, :], axis=0)
+                 for j in range(k)]
+    centroids = np.vstack(centroids)
+    return centroids
+
+
 def kmeans(X, k, iterations=1000):
     """k-means clustering"""
-    centroids = X[k:]
+    centroids = initialize(X, k)
+    for _ in range(iterations):
+        clss = assign_class(X, centroids)
+        new_centroids = get_centroids(X, k, clss)
 
-    for i in range(iterations):
-
-        clss = np.argmin(((X[:, :, None] - centroids.T[None, :, :, ])
-                          ** 2).sum(axis=1), axis=1)
-
-        centroids = initialize(X, k)
-        new_centroids = np.array([X[j, :] ==
-                                  np.random.uniform(np.min(X, axis=0),
-                                  np.max(X, axis=0)(1, X.shape[1]))
-                                  if X[clss == i].size == 0
-                                  else X[clss == j, :].mean(axis=0)
-                                  for j in range(k)])
-
-        if new_centroids.all() == centroids.all():
+        if np.array_equal(new_centroids, centroids):
             break
         else:
-            centroids = new_centroids
-    return centroids, clss
+            centroids = np.copy(new_centroids)
+    return new_centroids, clss
