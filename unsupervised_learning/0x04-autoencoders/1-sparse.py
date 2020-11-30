@@ -15,7 +15,8 @@ def autoencoder(input_dims, hidden_layers, latent_dims, lambtha):
         enc = keras.layers.Dense(units=layer_dims, activation="relu",
                                  activity_regularizer=reg)(enc)
 
-    bot_neck = keras.layers.Dense(units=latent_dims, activation="relu")(enc)
+    bot_neck = keras.layers.Dense(units=latent_dims, activation="relu",
+                                  activity_regularizer=reg)(enc)
 
     dec_input = keras.Input(shape=(latent_dims,))
     dec = dec_input
