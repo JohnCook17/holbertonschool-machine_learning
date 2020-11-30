@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""variational autoencoder"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
-    """"""
+    """The encoder"""
     # encoder below
     inputs = keras.Input(shape=(input_dims,))
 
@@ -17,7 +17,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     log_sigma = keras.layers.Dense(units=latent_dims)(enc)
 
     def sampling(args):
-        """"""
+        """the sampling function"""
         mean, log_sigma = args
 
         epsilon = keras.backend.random_normal(shape=(keras.backend
@@ -49,10 +49,10 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     auto = keras.Model(inputs=inputs, outputs=outputs)
 
     def custom_loss(inputs, outputs, input_dims, log_sigma, mean):
-        """"""
+        """custom loss function"""
 
         def loss(inputs, outputs):
-            """"""
+            """loss of the custom loss"""
             rec_loss = keras.losses.binary_crossentropy(inputs, outputs)
             rec_loss *= input_dims
             kl_loss = (1 + log_sigma - keras.backend
