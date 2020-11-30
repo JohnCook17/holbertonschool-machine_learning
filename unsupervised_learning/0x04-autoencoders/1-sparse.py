@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-""""""
-# change the line below!!!
-from tensorflow.python import keras
+"""An auto endoder that uses sparsity"""
+import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims, lambtha):
-    """"""
+    """encodes using sparsity and decodes"""
     input_layer = keras.Input(shape=(input_dims,))
 
     reg = keras.regularizers.l1(lambtha)

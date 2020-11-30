@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""Convolutional Autoencoder"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, filters, latent_dims):
-    """"""
+    """uses convolution to autoencode"""
     inputs = keras.Input((input_dims))
     enc = inputs
 

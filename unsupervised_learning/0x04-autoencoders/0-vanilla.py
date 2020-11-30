@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""a vanilla auto encoder"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
-    """"""
+    """autoencodes and decodes"""
     input_layer = keras.Input(shape=(input_dims,))
 
     enc = input_layer
