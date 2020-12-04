@@ -26,3 +26,15 @@ class BidirectionalCell():
         h_next = np.tanh(term0 + self.bhf)
 
         return h_next
+
+    def backward(self, h_next, x_t):
+        """"""
+        concat = np.concatenate((h_next, x_t), axis=1)
+        term0 = np.matmul(concat, self.Whb)
+        h_prev = np.tanh(term0 +self.bhb)
+
+        return h_prev
+
+    def output(self, H):
+        """"""
+        return self.softmax(np.matmul(H, self.Wy) + self.by)

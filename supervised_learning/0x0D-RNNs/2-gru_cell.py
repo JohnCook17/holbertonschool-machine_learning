@@ -22,15 +22,17 @@ class GRUCell():
 
     def softmax(self, x):
         """"""
-        e_x = np.exp(x - np.max(x))
-        return e_x / e_x.sum(axis=0)
+        e_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return e_x / e_x.sum(axis=1, keepdims=True)
 
     def forward(self, h_prev, x_t):
         """"""
         concat = np.concatenate((h_prev, x_t), axis=1)
+        
         z_t = self.sigmoid(np.matmul(concat, self.Wz) + self.bz)
         r_t = self.sigmoid(np.matmul(concat, self.Wr) + self.br)
-        h_hat_t = np.tanh(np.matmul(concat, self.Wh) + (r_t * h_prev) + self.bh)
+        intermidiate = np.concatenate((r_t * h_prev, x_t), axis=1)
+        h_hat_t = np.tanh(np.matmul(intermidiate, self.Wh) + self.bh)
         h_t = (1 - z_t) * h_prev + z_t * h_hat_t
         y = self.softmax(np.matmul(h_t, self.Wy) + self.by)
 

@@ -14,8 +14,8 @@ class RNNCell():
 
     def softmax(self, x):
         """"""
-        e_x = np.exp(x - np.max(x))
-        return e_x / e_x.sum(axis=0)
+        e_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return e_x / e_x.sum(axis=1, keepdims=True)
 
     def forward(self, h_prev, x_t):
         """"""
