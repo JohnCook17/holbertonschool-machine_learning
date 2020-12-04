@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""Building an RNN cell layer"""
 import numpy as np
 
 
 def rnn(rnn_cell, X, h_0):
-    """"""
+    """The RNN function"""
     H = []
     Y = []
     H.append(h_0)
