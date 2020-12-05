@@ -12,7 +12,7 @@ def deep_rnn(rnn_cells, X, h_0):
     for time_step in range(X.shape[0]):
         for depth, layer in enumerate(rnn_cells):
             if depth == 0:
-                temp_h, y = layer.forward(h[depth], X[time_step]) 
+                temp_h, y = layer.forward(h[depth], X[time_step])
             else:
                 temp_h, y = layer.forward(h[depth], h[depth - 1])
             h[depth] = temp_h

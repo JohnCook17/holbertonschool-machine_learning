@@ -31,6 +31,6 @@ class BidirectionalCell():
         """The backward prop in a Bidirectional Cell"""
         concat = np.concatenate((h_next, x_t), axis=1)
         term0 = np.matmul(concat, self.Whb)
-        h_prev = np.tanh(term0 +self.bhb)
+        h_prev = np.tanh(term0 + self.bhb)
 
         return h_prev
