@@ -25,7 +25,7 @@ def preprocess(df_to_load):
     print("======================")
 
     print("Removing unneeded values")
-    df = df.drop(labels=["Open", "High", "Low", "Volume_(Currency)", "Weighted_Price"], axis=1)
+    df = df.drop(labels=["Open", "High", "Low", "Volume_(BTC)", "Weighted_Price"], axis=1)
 
     print("======================")
     print(df.dtypes)
@@ -41,10 +41,30 @@ def preprocess(df_to_load):
     start_time = coin_base_date - np.timedelta64(1, "D")
     end_time = coin_base_date
     df = df[df.Timestamp.between(start_time, end_time)]
-    
+
+    # print("Normalizing data")
+    # df["Close"] = df["Close"] * df["Volume_(Currency)"] / df["Volume_(Currency)"].sum()
+
+    print("getting Hours in day")
+    my_data = []
+    for i in range(1, 25):
+        start_time = coin_base_date - np.timedelta64(i, "h")
+        end_time = coin_base_date - np.timedelta64(i - 1, "h")
+        my_data.append(df[df.Timestamp.between(start_time, end_time)]["Close"].values[-1])
+
+    print("making new df")
+    new_df = pd.DataFrame(my_data, columns=["Hour"])
+
+    print("offsetting Hours by 1 for target data")
+    print(new_df)
+    new_df.drop_duplicates(subset="Hour", keep="last")
+    new_df["Target"] = new_df["Hour"].shift(periods=-1,fill_value=new_df["Hour"].values[-1])
+
     print("======================")
-    print(df.head())
+    print(new_df.head(25))
     print("======================")
+
+    new_df.to_pickle(df_to_load[:-4] + "_pickle")
 
 if __name__ == "__main__":
 
