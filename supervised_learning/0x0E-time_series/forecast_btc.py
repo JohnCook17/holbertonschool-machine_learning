@@ -14,32 +14,24 @@ def forcast():
     values = np.genfromtxt(train_path, delimiter=",", skip_header=True)
     targets = np.genfromtxt(train_target_path, delimiter=",", skip_header=True)
 
-
-    print(values.shape)
-    print(targets.shape)
-
-
-    values = values.reshape(24, 1)
-    targets = targets.reshape(1, 1)
+    values = values.reshape(1, 24, 1)
+    targets = targets[np.newaxis].reshape(1, 1, 1)
 
     values = tf.data.Dataset.from_tensor_slices([values])
+    values = values.repeat()
     targets = tf.data.Dataset.from_tensor_slices([targets])
+    targets = targets.repeat()
 
     train_dataset = tf.data.Dataset.zip((values, targets))
 
-    model = keras.models.Sequential([keras.layers.LSTM(units=(24, 1), return_sequences=True)])
+    model = keras.models.Sequential([keras.layers.InputLayer(input_shape=(1, 24, 1)), keras.layers.LSTM(units=1, return_sequences=True)])
 
     model.compile(loss="mean_squared_error", optimizer=tf.train.AdamOptimizer())
 
-    print(train_dataset, "\n")
-    for i, element in enumerate(train_dataset.take(10)):
-        print(i)
-        print(element)
-        
-
     history = model.fit(train_dataset, steps_per_epoch=1, validation_split=False, epochs=1)
+
+    print(history.history)
 
     return history
 
 history = forcast()
-print(history)
