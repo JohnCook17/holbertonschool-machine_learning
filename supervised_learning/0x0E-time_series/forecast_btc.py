@@ -14,8 +14,14 @@ def forcast():
     values = train_array[:, 0].copy()
     targets = train_array[:, 1].copy()
 
+    print(values.shape)
+    print(targets.shape)
+
+    values = values.reshape(24, 1)
+    targets = targets[0].reshape(1, 1)
+
     values = tf.data.Dataset.from_tensor_slices([values])
-    targets = tf.data.Dataset.from_tensor_slices(targets)
+    targets = tf.data.Dataset.from_tensor_slices([targets])
 
     train_dataset = tf.data.Dataset.zip((values, targets))
 
