@@ -9,16 +9,18 @@ def forcast():
     tf.enable_eager_execution()
 
     train_path = "data/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22_preprocessed.csv"
+    train_target_path = "data/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22targets_preprocessed.csv"
 
-    train_array = np.genfromtxt(train_path, delimiter=",", skip_header=True)
-    values = train_array[:, 0].copy()
-    targets = train_array[:, 1].copy()
+    values = np.genfromtxt(train_path, delimiter=",", skip_header=True)
+    targets = np.genfromtxt(train_target_path, delimiter=",", skip_header=True)
+
 
     print(values.shape)
     print(targets.shape)
 
+
     values = values.reshape(24, 1)
-    targets = targets[0].reshape(1, 1)
+    targets = targets.reshape(1, 1)
 
     values = tf.data.Dataset.from_tensor_slices([values])
     targets = tf.data.Dataset.from_tensor_slices([targets])
@@ -30,10 +32,12 @@ def forcast():
     model.compile(loss="mean_squared_error", optimizer=tf.train.AdamOptimizer())
 
     print(train_dataset, "\n")
-    for element in train_dataset:
+    for i, element in enumerate(train_dataset.take(10)):
+        print(i)
         print(element)
+        
 
-    history = model.fit(x=train_dataset, steps_per_epoch=1, validation_split=False, epochs=1)
+    history = model.fit(train_dataset, steps_per_epoch=1, validation_split=False, epochs=1)
 
     return history
 

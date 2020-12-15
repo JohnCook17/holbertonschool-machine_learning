@@ -47,24 +47,33 @@ def preprocess(df_to_load):
 
     print("getting Hours in day")
     my_data = []
-    for i in range(1, 25):
+    for i in range(1, 26):
         start_time = coin_base_date - np.timedelta64(i, "h")
         end_time = coin_base_date - np.timedelta64(i - 1, "h")
         my_data.append(df[df.Timestamp.between(start_time, end_time)]["Close"].values[-1])
 
     print("making new df")
-    new_df = pd.DataFrame(my_data, columns=["Hour"])
+    new_df = pd.DataFrame(my_data, columns=["inputs"])
 
     print("offsetting Hours by 1 for target data")
     print(new_df)
-    new_df.drop_duplicates(subset="Hour", keep="last")
-    new_df["Target"] = new_df["Hour"].shift(periods=-1,fill_value=new_df["Hour"].values[-1])
+    new_df.drop_duplicates(subset="inputs", keep="last")
+    targets_df = pd.DataFrame()
+    targets_df["targets"] = new_df["inputs"].tail(1)
+    # new_df["targets"] = ""
+    # new_df.ix[0, "targets"] = new_df["inputs"].values[-1]
+    # new_df.drop_duplicates(subset="Target", keep="first")
+    new_df.drop(new_df.tail(1).index, inplace=True)
+    # new_df["Target"] = new_df["Hour"].shift(periods=-1,fill_value=new_df["Hour"].values[-1])
 
     print("======================")
     print(new_df.head(25))
+    print(targets_df.head(2))
     print("======================")
 
     new_df.to_pickle(df_to_load[:-4] + "_pickle")
+    new_df.to_csv(df_to_load[:-4] + "_preprocessed.csv", index=False)
+    targets_df.to_csv(df_to_load[:-4] + "targets_preprocessed.csv", index=False)
 
 if __name__ == "__main__":
 
