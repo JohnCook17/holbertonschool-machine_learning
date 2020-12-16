@@ -42,6 +42,17 @@ def preprocess(df_to_load):
     end_time = coin_base_date
     df = df[df.Timestamp.between(start_time, end_time)]
 
+    print("making prediction dataset")
+    pred_date = pd.to_datetime(df["Timestamp"]).values[-1]
+
+    p_start_time = pred_date - np.timedelta64(2, "D")
+    p_end_time = pred_date - np.timedelta64(1, "D")
+
+    p_df = df[df.Timestamp.between(start_time, end_time)].copy()
+    print("++++++++++++++++++++++++++++")
+    print(p_df.head(), "\n\n", p_df.tail())
+    print("++++++++++++++++++++++++++++")
+
     # print("Normalizing data")
     # df["Close"] = df["Close"] * df["Volume_(Currency)"] / df["Volume_(Currency)"].sum()
 
@@ -52,12 +63,20 @@ def preprocess(df_to_load):
         end_time = coin_base_date - np.timedelta64(i - 1, "h")
         my_data.append(df[df.Timestamp.between(start_time, end_time)]["Close"].values[-1])
 
-    print("making new df")
+    my_p_data = []
+    for i in range(1, 25):
+        p_start_time = coin_base_date - np.timedelta64(i, "h")
+        p_end_time = coin_base_date - np.timedelta64(i - 1, "h")
+        my_p_data.append(p_df[p_df.Timestamp.between(p_start_time, p_end_time)]["Close"].values[-1])
+
+    print("making new dfs")
     new_df = pd.DataFrame(my_data, columns=["inputs"])
 
+    new_p_df = pd.DataFrame(my_p_data, columns=["inputs"])
+
     print("offsetting Hours by 1 for target data")
-    print(new_df)
     new_df.drop_duplicates(subset="inputs", keep="last")
+    new_p_df.drop_duplicates(subset="inputs", keep="last")
     targets_df = pd.DataFrame()
     targets_df["targets"] = new_df["inputs"].tail(1)
     # new_df["targets"] = ""
@@ -69,11 +88,13 @@ def preprocess(df_to_load):
     print("======================")
     print(new_df.head(25))
     print(targets_df.head(2))
+    print(new_p_df.head(24))
     print("======================")
 
     new_df.to_pickle(df_to_load[:-4] + "_pickle")
     new_df.to_csv(df_to_load[:-4] + "_preprocessed.csv", index=False)
     targets_df.to_csv(df_to_load[:-4] + "targets_preprocessed.csv", index=False)
+    new_p_df.to_csv(df_to_load[:-4] + "_prediction.csv", index=False)
 
 if __name__ == "__main__":
 
