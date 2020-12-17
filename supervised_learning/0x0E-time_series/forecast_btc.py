@@ -58,29 +58,29 @@ def forcast():
 
     model = (tf.keras.models
              .Sequential([tf.keras.layers.InputLayer(input_shape=(1, 24, 1)),
-                          tf.keras.layers.LSTM(units=1,
-                                               return_sequences=True,
-                                               activation="relu"),
+                          tf.keras.layers.LSTM(units=1),
                           tf.keras.layers.Dense(units=1)]))
 
     model.compile(loss="mean_squared_error",
-                  optimizer=tf.train.AdamOptimizer(learning_rate=1))
+                  optimizer=tf.train.AdamOptimizer(learning_rate=10))  # 1
 
     history = model.fit(train_dataset,
                         steps_per_epoch=1,
                         batch_size=1,
                         validation_split=False,
-                        epochs=4500,
+                        epochs=100,  # 4500 is ideal for val set
                         validation_data=validation_dataset)
 
     model.save_weights("saved_model/lstm.h5")
+
+    plt.plot(history.history["loss"], "b")
+    plt.plot(history.history["val_loss"], "r")
+    plt.show()
 
     return model
 
 
 def prediction(prediction_path, model, reshape_shape):
-
-    # history = model.history
 
     prediction_data = np.genfromtxt(prediction_path,
                                     delimiter=",",
@@ -96,7 +96,7 @@ def prediction(prediction_path, model, reshape_shape):
 
     my_prediction = model.predict(prediction_data, steps=1)
 
-    print(my_prediction)
+    print("my pred = ", my_prediction)
     return my_prediction.flatten()
 
 
@@ -105,9 +105,7 @@ if __name__ == "__main__":
         model = (tf.keras.models
                  .Sequential([tf.keras.layers.
                               InputLayer(input_shape=(24, 1)),
-                              tf.keras.layers.LSTM(units=1,
-                                                   return_sequences=True,
-                                                   activation="relu"),
+                              tf.keras.layers.LSTM(units=1),
                               tf.keras.layers.Dense(units=1)]))
         model.load_weights("saved_model/lstm.h5")
         model.compile(loss="mean_squared_error",
@@ -117,18 +115,26 @@ if __name__ == "__main__":
         model = forcast()
         reshape_shape = (24, 1, 1, 1)
 
-    predictions = []
-    for i in range(7):
-        prediction_path = "data/coinbaseUSDday{}.csv".format(i)
-        predictions.append(prediction(prediction_path, model, reshape_shape))
+    my_datasets = ["coinbase", "bitstamp"]
 
-    targets = np.genfromtxt("data/coinbaseUSD_prediction.csv",
-                            delimiter=",",
-                            skip_header=True)
+    for dataset in my_datasets:
+        predictions = []
+        for i in range(7):
+            prediction_path = "data/{}USDday{}.csv".format(dataset, i)
+            predictions.append(prediction(prediction_path,
+                                          model,
+                                          reshape_shape))
 
-    print(predictions)
-    print(targets)
+        predictions = np.asarray(predictions)
+        targets = np.genfromtxt("data/{}USD_7_day_targets.csv".format(dataset),
+                                delimiter=",",
+                                skip_header=True)
 
-    plt.plot(predictions, len(predictions), "b")
-    plt.plot(targets, len(targets), "r")
-    plt.show()
+        targets = targets[np.newaxis].reshape(7, 1)
+
+        print(predictions.shape)
+        print(targets.shape)
+
+        plt.plot(predictions, "b")
+        plt.plot(targets, "r")
+        plt.show()

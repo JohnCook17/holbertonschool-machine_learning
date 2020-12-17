@@ -183,7 +183,7 @@ def make_lots_of_datasets(df_to_load):
 
         new_df.to_csv(df_to_load[:16] + "day{}"
                       .format(j) + ".csv", index=False)
-    targets_df.to_csv(df_to_load[:16] + "7_day_targets.csv", index=False)
+    targets_df.to_csv(df_to_load[:16] + "_7_day_targets.csv", index=False)
 
 
 if __name__ == "__main__":
