@@ -31,7 +31,7 @@ def preprocess(df_to_load):
                          "Low",
                          "Volume_(BTC)",
                          "Weighted_Price"],
-                         axis=1)
+                 axis=1)
 
     print("======================")
     print(df.dtypes)
@@ -97,11 +97,10 @@ def preprocess(df_to_load):
     print(new_p_df.head(24))
     print("======================")
 
-    new_df.to_pickle(df_to_load[:-4] + "_pickle")
-    new_df.to_csv(df_to_load[:-4] + "_preprocessed.csv", index=False)
-    targets_df.to_csv(df_to_load[:-4] + "targets_preprocessed.csv",
+    new_df.to_csv(df_to_load[:16] + "_preprocessed.csv", index=False)
+    targets_df.to_csv(df_to_load[:16] + "_targets_preprocessed.csv",
                       index=False)
-    new_p_df.to_csv(df_to_load[:-4] + "_prediction.csv", index=False)
+    new_p_df.to_csv(df_to_load[:16] + "_prediction.csv", index=False)
 
 
 def make_lots_of_datasets(df_to_load):
@@ -128,7 +127,7 @@ def make_lots_of_datasets(df_to_load):
                          "Low",
                          "Volume_(BTC)",
                          "Weighted_Price"],
-                         axis=1)
+                 axis=1)
 
     print("======================")
     print(df.dtypes)
@@ -165,22 +164,27 @@ def make_lots_of_datasets(df_to_load):
             print(i, j)
             start_time = my_date - np.timedelta64(i, "h")
             end_time = my_date - np.timedelta64(i - 1, "h")
-            my_data.append(day["dfs"][day["dfs"].Timestamp.between(start_time,
-                                                     end_time)]["Close"].values[-1])
+            ((my_data
+              .append(day["dfs"][day["dfs"]
+                                 .Timestamp.between(start_time,
+                                                    end_time)]["Close"]
+                      .values[-1])))
         print("making new df")
         new_df = pd.DataFrame(my_data, columns=["inputs"])
 
         print("offsetting Hours by 1 for target data")
         new_df.drop_duplicates(subset="inputs", keep="last")
         targets_df["Day {}".format(j)] = new_df.values[-1]
-        # new_df.drop(new_df.tail(1).index, inplace=True)
+        new_df.drop(new_df.tail(1).index, inplace=True)
 
         print("======================")
         print(new_df.head(25))
         print("======================")
 
-        new_df.to_csv(df_to_load[:10] + "day{}".format(j) + ".csv", index=False)
-    targets_df.to_csv(df_to_load[:10] + "7_day_targets.csv", index=False)
+        new_df.to_csv(df_to_load[:16] + "day{}"
+                      .format(j) + ".csv", index=False)
+    targets_df.to_csv(df_to_load[:16] + "7_day_targets.csv", index=False)
+
 
 if __name__ == "__main__":
 
@@ -188,4 +192,4 @@ if __name__ == "__main__":
            "data/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22.csv"]
     for data in dfs:
         preprocess(data)
-        make_lots_of_datasets(data) # comment out if not wanting lots of data
+        make_lots_of_datasets(data)  # comment out if not wanting lots of data

@@ -9,11 +9,11 @@ from os import path
 def forcast():
     tf.enable_eager_execution()
 
-    train_path = "data/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22_preprocessed.csv"
-    train_target_path = "data/bitstampUSD_1-min_data_2012-01-01_to_2020-04-22targets_preprocessed.csv"
+    train_path = "data/bitstampUSD_preprocessed.csv"
+    train_target_path = "data/bitstampUSD_targets_preprocessed.csv"
 
-    validate_path = "data/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09_preprocessed.csv"
-    validate_target_path = "data/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09targets_preprocessed.csv"
+    validate_path = "data/coinbaseUSD_preprocessed.csv"
+    validate_target_path = "data/coinbaseUSD_targets_preprocessed.csv"
 
     values = np.genfromtxt(train_path,
                            delimiter=",",
@@ -73,28 +73,20 @@ def forcast():
                         epochs=4500,
                         validation_data=validation_dataset)
 
-    model.save("saved_model/lstm")
+    model.save_weights("saved_model/lstm.h5")
 
     return model
 
 
-if __name__ == "__main__":
+def prediction(prediction_path, model, reshape_shape):
 
-    if path.exists("saved_model/lstm"):
-        model = tf.keras.models.load_model("saved_model/lstm")
-        model.compile(loss="mean_squared_error",
-                      optimizer=tf.train.AdamOptimizer(learning_rate=1))
-    else:
-        model = forcast()
+    # history = model.history
 
-    history = model.history
-
-    prediction_path = "data/coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09_prediction.csv"
     prediction_data = np.genfromtxt(prediction_path,
                                     delimiter=",",
                                     skip_header=True)
-
-    prediction_data = prediction_data[np.newaxis].reshape(24, 1, 1, 1)
+    print(prediction_data.shape)
+    prediction_data = prediction_data[np.newaxis].reshape(reshape_shape)
     print(prediction_data.shape)
     # prediction_data = tf.data.Dataset.from_tensor_slices([prediction_data])
     # prediction_data = prediction_data.repeat()
@@ -105,3 +97,38 @@ if __name__ == "__main__":
     my_prediction = model.predict(prediction_data, steps=1)
 
     print(my_prediction)
+    return my_prediction.flatten()
+
+
+if __name__ == "__main__":
+    if path.exists("saved_model/lstm.h5"):
+        model = (tf.keras.models
+                 .Sequential([tf.keras.layers.
+                              InputLayer(input_shape=(24, 1)),
+                              tf.keras.layers.LSTM(units=1,
+                                                   return_sequences=True,
+                                                   activation="relu"),
+                              tf.keras.layers.Dense(units=1)]))
+        model.load_weights("saved_model/lstm.h5")
+        model.compile(loss="mean_squared_error",
+                      optimizer=tf.train.AdamOptimizer(learning_rate=1))
+        reshape_shape = (1, 24, 1)
+    else:
+        model = forcast()
+        reshape_shape = (24, 1, 1, 1)
+
+    predictions = []
+    for i in range(7):
+        prediction_path = "data/coinbaseUSDday{}.csv".format(i)
+        predictions.append(prediction(prediction_path, model, reshape_shape))
+
+    targets = np.genfromtxt("data/coinbaseUSD_prediction.csv",
+                            delimiter=",",
+                            skip_header=True)
+
+    print(predictions)
+    print(targets)
+
+    plt.plot(predictions, len(predictions), "b")
+    plt.plot(targets, len(targets), "r")
+    plt.show()
