@@ -68,7 +68,7 @@ def forcast():
                         steps_per_epoch=1,
                         batch_size=1,
                         validation_split=False,
-                        epochs=100,  # 4500 is ideal for val set
+                        epochs=1000,  # 4500 is ideal for val set
                         validation_data=validation_dataset)
 
     model.save_weights("saved_model/lstm.h5")
@@ -132,8 +132,8 @@ if __name__ == "__main__":
 
         targets = targets[np.newaxis].reshape(7, 1)
 
-        print(predictions.shape)
-        print(targets.shape)
+        print(predictions)
+        print(targets)
 
         plt.plot(predictions, "b")
         plt.plot(targets, "r")

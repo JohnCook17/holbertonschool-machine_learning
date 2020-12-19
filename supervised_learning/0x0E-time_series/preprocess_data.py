@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-
+"""Preprocesses data"""
 import numpy as np
 import pandas as pd
 from os import path
 
 
 def preprocess(df_to_load):
-    """"""
+    """Preprocess training and validation data"""
 
     print("====================LOADING DATA====================")
     df = pd.read_csv(df_to_load, parse_dates=["Timestamp"])
@@ -104,6 +104,7 @@ def preprocess(df_to_load):
 
 
 def make_lots_of_datasets(df_to_load):
+    """preprocess additional data"""
     print("====================LOADING DATA====================")
     df = pd.read_csv(df_to_load, parse_dates=["Timestamp"])
 
