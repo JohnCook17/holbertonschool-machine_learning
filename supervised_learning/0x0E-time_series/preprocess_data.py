@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Preprocesses data"""
 import numpy as np
-from os import path
+from os import path, system
 
 try:
     import pandas as pd
-except Exception as e:
-    exit()
+except ImportError:
+    os.system("python -m pip install pandas")
 
 
 def preprocess(df_to_load):
