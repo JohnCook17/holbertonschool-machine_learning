@@ -5,7 +5,7 @@ from os import path
 
 try:
     import pandas as pd
-except ImportError():
+except Exception as e:
     exit()
 
 
