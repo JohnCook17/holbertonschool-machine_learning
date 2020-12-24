@@ -48,9 +48,8 @@ def modified_precision(ref, sentence, n):
     return numerator, denominator
 
 
-def uni_bleu(references, sentence):
+def ngram_bleu(references, sentence, n):
     """technicaly n-gram bleu if you change n to 1"""
-    n = 1
     weights = [1 / n for i in range(n)]
     p_num = 0
     p_den = 0
@@ -63,7 +62,7 @@ def uni_bleu(references, sentence):
     for ref in references:
         for i in range(1, len(weights) + 1):
             p_num, p_den = modified_precision(ref, sentence, n)
-            # print(p_num, p_den)
+            print(p_num, p_den)
             p_num_total[i] += p_num
             p_den_total[i] += p_den
             sen_len = len(sentence)

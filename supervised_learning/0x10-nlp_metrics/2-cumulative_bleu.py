@@ -48,9 +48,8 @@ def modified_precision(ref, sentence, n):
     return numerator, denominator
 
 
-def uni_bleu(references, sentence):
+def cumulative_bleu(references, sentence, n):
     """technicaly n-gram bleu if you change n to 1"""
-    n = 1
     weights = [1 / n for i in range(n)]
     p_num = 0
     p_den = 0
