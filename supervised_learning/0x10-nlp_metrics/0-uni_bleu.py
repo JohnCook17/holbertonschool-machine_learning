@@ -25,67 +25,59 @@ def count_ngram(unigram, ngram=1):
     return my_count
 
 
-def count_clip_ngram(references, sentence, n):
+def modified_precision(references, sentence, n):
     """"""
-    res = {}
-    
-    sent_ngram = count_ngram(sentence, n)
+    counts = count_ngram(sentence, n)
+    max_counts = {}
+
     for ref in references:
         ref_ngram = count_ngram(ref, n)
         for ngram in ref_ngram.keys():
-            if ngram in res.keys():
-                # print(ngram)
-                res[ngram] = max(ref_ngram[ngram], res[ngram])
-            else:
-                # print(ngram)
-                res[ngram] = ref_ngram[ngram]
+            max_counts[ngram] = max(max_counts.get(ngram, 0), ref_ngram[ngram])
     
-    return {
-        k: min(sent_ngram.get(k, 0), res.get(k, 0))
-        for k in sent_ngram
-    }
+    clipped_counts = {ngram: min(count, max_counts.get(ngram, 0)) for ngram, count in counts.items()}
+
+    numerator = sum(clipped_counts.values())
+
+    denominator = max(1, sum(counts.values()))
+
+    print(numerator / denominator)
+
+    return numerator, denominator
 
 
 def uni_bleu(references, sentence):
     """"""
     n = 1
-    new_dict = {}
-    ct = 0
-    
+    p_num = {}
+    p_den = {}
+    sen_lens = 0
+    ref_lengths = 0
+    weights = [1 / n for i in range(n)] # change this to 1 / n n times
+    print(weights)
     print("===========")
     for ref in references:
-        my_dict = count_ngram(ref, n)
-        new_dict.update(my_dict)
-    values = new_dict.values()
-    ct = sum(values)
-    denominator = float(max(ct, 1))
-    my_p = []
-    for word in sentence:
-        ct_clip = count_clip_ngram(references, [word], n)
-        numerator = sum(ct_clip.values())
-
-        if numerator != 0:
-            my_p.append(numerator / denominator)
-        else:
-            my_p.append(1e-10)
-
-        denominator -= 1
-
-    p_sum = 0
-    for n in range(1, 5):
-        p_sum += 1 / n * np.log(my_p[n - 1])
-
-    p_sum = np.exp(p_sum)
+        for i in range(1, len(weights) + 1):
+            p_num[i], p_den[i] = modified_precision(references, sentence, n)
+            sen_len = len(sentence)
+            sen_lens += sen_len
+            ref_lengths += (np.abs(np.asarray([len(x) for x in references]) - len(sentence))).argmin()
 
     best = (np.abs(np.asarray([len(x) for x in references]) - len(sentence))).argmin()
 
+    p_n = [p_num[i] / p_den[i] for i in range(1, len(weights) + 1)]
+
+    # brevity penalty
     if len(sentence) > best:
         bp = 1
     elif len(sentence) <= best:
-        bp = np.exp(1 - (len(sentence) / best))
+        bp = np.exp(1 - (ref_lengths / sen_lens))
+    # end brevity penalty
 
-    print(my_p)
-
-    bleu = bp * p_sum
+    s = (w_i * np.log(p_i) for w_i, p_i in zip(weights, p_n))
+    print("bp = ", bp)
+    s = np.exp(np.sum(s))
+    print("s = ", s)
+    bleu = bp * s
 
     return bleu
