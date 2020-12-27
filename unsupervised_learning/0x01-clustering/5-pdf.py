@@ -8,14 +8,18 @@ def pdf(X, m, S):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
 
-    if not isinstance(m, np.ndarray) or len(m.shape) != 1:
+    n, d = X.shape
+
+    if not isinstance(m, np.ndarray) or len(m.shape) != 1 or m.shape[0] != d:
         return None
 
-    if not isinstance(S, np.ndarray) or len(S.shape) != 2:
+    if ((not isinstance(S, np.ndarray)
+         or len(S.shape) != 2
+         or S.shape[0] != d
+         or S.shape[1] != d)):
         return None
 
     tol = 1e-300
-    n, d = X.shape
     sigma = np.linalg.det(S)
     term0 = (1 / ((2 * np.pi) ** (d / 2) * (sigma ** 0.5)))
     term1 = (np.linalg.inv(S) @ (X - m).T).T
