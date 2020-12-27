@@ -9,6 +9,9 @@ def initialize(X, k):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None
 
+    if not isinstance(k, int) or k < 1:
+        return None, None, None
+
     pi = np.array(np.repeat((1 / k), k))
     m = kmeans(X, k)[0]
     identity_m = np.identity(X.shape[1])
