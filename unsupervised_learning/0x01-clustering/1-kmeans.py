@@ -46,14 +46,27 @@ def get_centroids(X, k, clss):
 
 def kmeans(X, k, iterations=1000):
     """k-means clustering"""
-    centroids = initialize(X, k)
-    for _ in range(iterations):
-        clss = assign_class(X, centroids)
-        new_centroids = get_centroids(X, k, clss)
+    try:
+        if not isinstance(X, np.ndarray):
+            return None, None
+        if not isinstance(iterations, int) or iterations < 1:
+            return None, None
+        n, d = X.shape
+        if not isinstance(k, int) or k < 1 or k > n:
+            return None, None
 
-        if np.array_equal(new_centroids, centroids):
-            break
-        else:
-            centroids = np.copy(new_centroids)
-    clss = assign_class(X, centroids)
-    return new_centroids, clss
+        centroids = initialize(X, k)
+        for _ in range(iterations):
+            clss = assign_class(X, centroids)
+            new_centroids = get_centroids(X, k, clss)
+
+            if np.array_equal(new_centroids, centroids):
+                break
+            else:
+                centroids = np.copy(new_centroids)
+        clss = assign_class(X, centroids)
+
+        return new_centroids, clss
+
+    except Exception as e:
+        return None, None
