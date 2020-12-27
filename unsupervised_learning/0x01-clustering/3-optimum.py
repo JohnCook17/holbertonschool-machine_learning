@@ -10,11 +10,20 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
 
+    if not isinstance(iterations, int) or iterations < 1:
+        return None, None
+
     if kmax is None:
         kmax = iterations
 
     if kmin is None:
         kmin = 1
+
+    if not isinstance(kmin, int):
+        return None, None
+
+    if not isinstance(kmax, int):
+        return None, None
 
     if kmin < 1:
         return None, None
