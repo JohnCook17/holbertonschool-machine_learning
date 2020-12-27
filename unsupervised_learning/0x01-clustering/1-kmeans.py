@@ -24,12 +24,22 @@ def assign_class(X, centroids):
 
 def get_centroids(X, k, clss):
     """gets the centroids"""
+    centroids = []
+    for j in range(k):
+        if np.isclose(X[clss == j, :].any(), 0):
+            centroids.append(np.random.uniform(np.min(X, axis=0),
+                                               np.max(X, axis=0),
+                                               (1, X.shape[1])))
+        else:
+            centroids.append(np.mean(X[clss == j, :], axis=0))
+    """
     centroids = [np.random.uniform(np.min(X, axis=0),
                                    np.max(X, axis=0),
                                    (1, X.shape[1]))
                  if np.isclose(np.size(X[clss == j, :]), 0)
                  else np.mean(X[clss == j, :], axis=0)
                  for j in range(k)]
+    """
     centroids = np.vstack(centroids)
     return centroids
 
@@ -45,4 +55,5 @@ def kmeans(X, k, iterations=1000):
             break
         else:
             centroids = np.copy(new_centroids)
+    clss = assign_class(X, centroids)
     return new_centroids, clss
