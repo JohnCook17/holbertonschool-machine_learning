@@ -1,12 +1,27 @@
 #!/usr/bin/env python3
-""""""
+"""Finds the optimal number of clusters"""
 import numpy as np
 kmeans = __import__('1-kmeans').kmeans
 variance = __import__('2-variance').variance
 
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
-    """"""
+    """Provides info for optimal cluster number"""
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+        return None, None
+
+    if kmax is None:
+        kmax = iterations
+
+    if kmin is None:
+        kmin = 1
+
+    if kmin < 1:
+        return None, None
+
+    if kmax <= kmin:
+        return None, None
+    
     res = []
     d_vars = []
     var = 0
