@@ -27,7 +27,7 @@ def expectation(X, pi, m, S):
     if m.shape[0] != k or m.shape[1] != d:
         return None, None
 
-    if S.shape[0] != K or S.shape[1] != d: or S.shape[2] != d:
+    if S.shape[0] != K or S.shape[1] != d or S.shape[2] != d:
         return None, None
 
     numerator = []
