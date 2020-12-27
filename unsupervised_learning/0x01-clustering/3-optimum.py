@@ -21,7 +21,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
 
     if kmax <= kmin:
         return None, None
-    
+
     res = []
     d_vars = []
     var = 0
@@ -30,10 +30,9 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         var = variance(X, C)
         if k == kmin:
             new_var = var
-        if C is not None and Clss is not None:
+        if C is not None and clss is not None:
             res.append((C, clss))
         if isinstance(var, float):
             d_vars.append(new_var - var)
-    
-    return res, d_vars
 
+    return res, d_vars
