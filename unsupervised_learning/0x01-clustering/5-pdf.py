@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
-""""""
+"""PDF of gmm"""
 import numpy as np
 
 
 def pdf(X, m, S):
-    """"""
+    """PDF of gaussian mixture model"""
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+        return None
+
+    if not isinstance(m, np.ndarray) or len(m.shape) != 1:
+        return None
+
+    if not isinstance(S, np.ndarray) or len(S.shape) != 2:
+        return None
+
     tol = 1e-300
-    i, j = np.indices(S.shape)
-    variance = S[i == j]
-    print(variance)
-    term0 = 1 / (np.sqrt(2 * np.pi * variance))
-    print("term0 = ", term0)
-    term1 = np.exp(-(np.square(X - m) / (2 * variance)))
-    print("term1 = ", term1)
-    ret = term0 * term1
-    print("ret = ", ret.shape)
-    return np.where(ret < tol, tol, ret)
+    n, d = X.shape
+    sigma = np.linalg.det(S)
+    term0 = (1 / ((2 * np.pi) ** (d / 2) * (sigma ** 0.5)))
+    term1 = (np.linalg.inv(S) @ (X - m).T).T
+    term2 = np.exp(-0.5 * np.sum((X - m) * term1, axis=1))
+    ret = term0 * term2.T
+    return np.where(ret <= tol, tol, ret)
