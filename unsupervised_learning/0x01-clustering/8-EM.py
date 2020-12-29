@@ -10,8 +10,8 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
     """"""
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None, None, None
-    
-    if not isinstance(K, int) or K < 1:
+
+    if not isinstance(k, int) or k < 1:
         return None, None, None, None, None
 
     if not isinstance(iterations, int) or iterations < 1:
@@ -19,7 +19,7 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
     if not isinstance(tol, float) or tol < 0:
         return None, None, None, None, None
-    
+
     if not isinstance(verbose, bool):
         return None, None, None, None, None
 
@@ -41,5 +41,5 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
     if verbose:
         print("Log Likelihood after {} iterations: {:0.5f}".format(i, likelyhood))
-    
+
     return pi, m, S, g, likelyhood
