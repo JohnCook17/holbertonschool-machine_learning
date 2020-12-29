@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""EM steps of gmm"""
 import numpy as np
 initialize = __import__('4-initialize').initialize
 expectation = __import__('6-expectation').expectation
@@ -7,7 +7,7 @@ maximization = __import__('7-maximization').maximization
 
 
 def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
-    """"""
+    """Inits, and runs expectation maximization for k clusters on X data"""
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None, None, None
 
@@ -30,7 +30,8 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         g, likelyhood = expectation(X, pi, m, S)
 
         if verbose and i % 10 == 0:
-            print("Log Likelihood after {} iterations: {:0.5f}".format(i, likelyhood))
+            print("Log Likelihood after {} iterations: {:0.5f}"
+                  .format(i, likelyhood))
 
         if np.isclose(likelyhood, previous_l, atol=tol, rtol=0):
             break
@@ -40,7 +41,7 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         previous_l = likelyhood
 
     if verbose:
-        print("Log Likelihood after {} iterations: {:0.5f}".format(i, likelyhood))
-
+        print("Log Likelihood after {} iterations: {:0.5f}"
+              .format(i, likelyhood))
 
     return pi, m, S, g, likelyhood
