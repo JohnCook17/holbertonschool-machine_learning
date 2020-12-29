@@ -39,4 +39,7 @@ def expectation(X, pi, m, S):
 
     g = numerator / np.sum(numerator, axis=0)
 
+    if np.isnan(g).any() or np.isnan(likelyhood):
+        return None, None
+
     return g, likelyhood
