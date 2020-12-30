@@ -54,4 +54,4 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
 
         prior_bic = bic
 
-    return best_k, best_res, np.asarray(likelyhoods)[:-1], np.asarray(bics)[:-1]
+    return best_k, best_res, np.asarray(likelyhoods), np.asarray(bics)
