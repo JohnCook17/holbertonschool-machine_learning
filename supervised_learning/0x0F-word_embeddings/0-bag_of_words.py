@@ -21,6 +21,8 @@ def bag_of_words(sentences, vocab=None):
                     vocab[word] = 1
                 else:
                     vocab[word] += 1
+    else:
+        vocab = dict(zip(vocab, vocab))
 
     words = {}
     for sentence in sentences:
