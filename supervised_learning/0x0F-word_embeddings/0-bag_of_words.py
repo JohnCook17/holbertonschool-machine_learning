@@ -22,7 +22,7 @@ def bag_of_words(sentences, vocab=None):
                 else:
                     vocab[word] += 1
 
-    words = {}        
+    words = {}
     for sentence in sentences:
         # print(sentence)
         for word in sentence.split():
@@ -43,7 +43,7 @@ def bag_of_words(sentences, vocab=None):
         for i, word in enumerate(features):
             if word in sentence:
                 BoW[j, i] = sentence.split().count(word)
-    
+
     BoW = BoW.astype("int32")
 
     return BoW, features
