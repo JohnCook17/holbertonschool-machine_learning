@@ -10,8 +10,11 @@ class RNNEncoder(tf.keras.layers.Layer):
         super().__init__()
         self.batch = batch
         self.units = units
-        self.embedding = tf.keras.layers.Embedding(input_dim=embedding, output_dim=self.units)
-        self.gru = tf.keras.layers.GRU(units=units, return_state=True)
+        self.embedding = tf.keras.layers.Embedding(vocab, embedding)
+        self.gru = tf.keras.layers.GRU(units,
+                                       recurrent_initializer='glorot_uniform',
+                                       return_sequences=True,
+                                       return_state=True)
 
     def initialize_hidden_state(self):
         """"""
@@ -20,9 +23,7 @@ class RNNEncoder(tf.keras.layers.Layer):
     def call(self, x, initial):
         """"""
         input_seq_len = tf.keras.backend.shape(x)[1]
-        # emb = self.embedding(x)
-        # x = tf.expand_dims(x, axis=0)
         emb = self.embedding(x)
-        outputs, hidden = self.gru(emb)
+        outputs, hidden = self.gru(emb, initial_state=initial)
 
         return outputs, hidden

@@ -14,11 +14,11 @@ class SelfAttention(tf.keras.layers.Layer):
 
     def call(self, s_prev, hidden_states):
         """"""
-        # s_prev_w = tf.keras.backend.sum(s_prev, self.W)
-        # hidden_states_u = tf.keras.backend.sum(hidden_states, self.U)
+        s_prev_w = self.W(s_prev)
+        hidden_states_u = self.U(hidden_states)
 
-        context = tf.keras.backend.sum(tf.keras.backend.dot(s_prev, hidden_states), keepdims=True)
-        weights = tf.keras.backend.sum(tf.keras.backend.dot(hidden_states, tf.keras.backend.transpose(s_prev)), axis=0, keepdims=True)
+        context = tf.keras.backend.sum(s_prev_w, axis=0)
+        weights = tf.keras.backend.sum(tf.keras.backend.dot(hidden_states_u, tf.keras.backend.transpose(s_prev_w)), axis=0, keepdims=True)
         weights = tf.keras.backend.transpose(weights)
 
         return context, weights
