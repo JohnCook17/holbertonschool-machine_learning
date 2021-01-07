@@ -8,11 +8,11 @@ class MultiHeadAttention(tf.keras.layers.Layer):
     """The MultiHeadAttention class inherits form Layer"""
     def __init__(self, dm, h):
         """Init of the class"""
-        super().__init__()
+        super(MultiHeadAttention, self).__init__()
 
         self.h = h
         self.dm = dm
-        self.depth = int(dm / h)
+        self.depth = dm // self.h
         self.Wq = tf.keras.layers.Dense(units=dm)
         self.Wk = tf.keras.layers.Dense(units=dm)
         self.Wv = tf.keras.layers.Dense(units=dm)
