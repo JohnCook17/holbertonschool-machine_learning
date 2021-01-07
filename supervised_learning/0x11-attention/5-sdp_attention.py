@@ -8,6 +8,9 @@ def sdp_attention(Q, K, V, mask=None):
 
     attn = tf.matmul(Q, K, transpose_b=True)
 
+    dk = tf.cast(tf.shape(K)[-1], tf.float32)
+    attn = attn / tf.math.sqrt(dk)
+
     if mask is not None:
         attn += (mask * -1e9)
 
