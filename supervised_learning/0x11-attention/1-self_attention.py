@@ -14,12 +14,14 @@ class SelfAttention(tf.keras.layers.Layer):
 
     def call(self, s_prev, hidden_states):
         """"""
-        s_prev_w = self.W(s_prev)
-        hidden_states_u = self.U(hidden_states)
+        query = tf.expand_dims(s_prev, axis=1)
 
-        context = tf.keras.backend.sum(s_prev_w, axis=0)
-        weights = tf.keras.backend.sum(tf.keras.backend.dot(hidden_states_u, tf.keras.backend.transpose(s_prev_w)), axis=0, keepdims=True)
-        weights = tf.keras.backend.transpose(weights)
+        score = self.V(tf.nn.tanh(self.W(query) + self.U(hidden_states)))
+
+        weights = tf.nn.softmax(score, axis=1)
+
+        context = weights * hidden_states
+        context = tf.reduce_sum(context, axis=1)
 
         return context, weights
         
