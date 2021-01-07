@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-""""""
+"""Multiheaded Attention"""
 import tensorflow as tf
 sdp_attention = __import__('5-sdp_attention').sdp_attention
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
-    """"""
+    """The MultiHeadAttention class inherits form Layer"""
     def __init__(self, dm, h):
-        """"""
+        """Init of the class"""
         super().__init__()
 
         self.h = h
@@ -18,24 +18,29 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         self.Wv = tf.keras.layers.Dense(units=dm)
         self.linear = tf.keras.layers.Dense(units=dm)
 
+    def split_heads(self, x, batch_size):
+        """Splits the heads"""
+        x = tf.reshape(x, (batch_size, -1, self.h, self.depth))
+        return tf.transpose(x, perm=[0, 2, 1, 3])
+
     def call(self, Q, K, V, mask):
-        """"""
+        """Calls the MultiHeaded Attention layers"""
         batch = Q.shape[0]
-        seq_len_q = Q.shape[1]
-        seq_len_v = K.shape[1]
-        dk = K.shape[2]
-        dv = V.shape[2]
 
-        residual = Q
+        Q = self.Wq(Q)
+        K = self.Wk(K)
+        V = self.Wv(V)
 
-        Q = self.Wq(Q)  # tf.reshape(, (batch, seq_len_q, self.h, dk))
-        K = self.Wk(K)  # tf.reshape(, (batch, seq_len_v, self.h, dk))
-        V = self.Wv(V)  # tf.reshape(, (batch, seq_len_v, self.h, dv))
+        Q = self.split_heads(Q, batch)
+        K = self.split_heads(K, batch)
+        V = self.split_heads(V, batch)
 
-        Q, attn = sdp_attention(Q, K, V, mask)
+        scaled_attention, attention_weights = sdp_attention(Q, K, V, mask)
 
-        Q = tf.concat((Q, residual), axis=2)
+        scaled_attention = tf.transpose(scaled_attention, perm=[0, 2, 1, 3])
 
-        Q = self.linear(Q)
+        concat_attention = tf.reshape(scaled_attention, (batch, -1, self.dm))
 
-        return Q, attn
+        output = self.linear(concat_attention)
+
+        return output, attention_weights
