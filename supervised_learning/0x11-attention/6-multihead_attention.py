@@ -12,7 +12,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
 
         self.h = h
         self.dm = dm
-        self.depth = dm // h
+        self.depth = int(dm / h)
         self.Wq = tf.keras.layers.Dense(units=dm)
         self.Wk = tf.keras.layers.Dense(units=dm)
         self.Wv = tf.keras.layers.Dense(units=dm)
