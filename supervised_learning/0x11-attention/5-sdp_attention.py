@@ -10,7 +10,7 @@ def sdp_attention(Q, K, V, mask=None):
 
     if mask is not None:
         attn = tf.add(tf.multiply(mask(attn), -1e9), attn)
-    
+
     attn = tf.keras.layers.Softmax(axis=-1)(attn)
 
     output = tf.matmul(attn, V)
