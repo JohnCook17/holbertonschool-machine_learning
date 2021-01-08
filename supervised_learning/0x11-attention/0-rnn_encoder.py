@@ -4,7 +4,7 @@ import tensorflow as tf
 
 
 class RNNEncoder(tf.keras.layers.Layer):
-    """An RNN Encoder which inherits form Layers"""
+    """An RNN Encoder which inherits form Layer"""
     def __init__(self, vocab, embedding, units, batch):
         """Init the RNN"""
         super().__init__()
@@ -22,7 +22,6 @@ class RNNEncoder(tf.keras.layers.Layer):
 
     def call(self, x, initial):
         """Calls the RNN encoder"""
-        input_seq_len = tf.keras.backend.shape(x)[1]
         emb = self.embedding(x)
         outputs, hidden = self.gru(emb, initial_state=initial)
 

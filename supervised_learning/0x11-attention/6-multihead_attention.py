@@ -25,7 +25,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
 
     def call(self, Q, K, V, mask):
         """Calls the MultiHeaded Attention layers"""
-        batch = Q.shape[0]
+        batch = tf.shape(Q)[0]
 
         Q = self.Wq(Q)
         K = self.Wk(K)
