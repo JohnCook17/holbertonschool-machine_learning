@@ -28,7 +28,7 @@ class Encoder(tf.keras.layers.Layer):
 
     def call(self, x, training, mask):
         """Calls the encoder"""
-        seq_len = x.shape[1]
+        seq_len = x.get_shape()[1]
 
         x = self.embedding(x)
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))

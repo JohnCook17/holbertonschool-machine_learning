@@ -28,7 +28,7 @@ class Decoder(tf.keras.layers.Layer):
 
     def call(self, x, encoder_output, training, look_ahead_mask, padding_mask):
         """Calls N blocks of decoder"""
-        seq_len = x.shape[1]
+        seq_len = x.get_shape()[1]
 
         x = self.embedding(x)
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
