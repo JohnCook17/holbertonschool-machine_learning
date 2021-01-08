@@ -12,7 +12,8 @@ class DecoderBlock(tf.keras.layers.Layer):
 
         self.mha1 = MultiHeadAttention(dm, h)
         self.mha2 = MultiHeadAttention(dm, h)
-        self.dense_hidden = tf.keras.layers.Dense(units=hidden, activation="relu")
+        self.dense_hidden = tf.keras.layers.Dense(units=hidden,
+                                                  activation="relu")
         self.dense_output = tf.keras.layers.Dense(units=dm)
         self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
@@ -27,7 +28,10 @@ class DecoderBlock(tf.keras.layers.Layer):
         attn1 = self.dropout1(attn1, training=training)
         out1 = self.layernorm1(attn1 + x)
 
-        attn2, attn_weights_block2 = self.mha2(out1, encoder_output, encoder_output, padding_mask)
+        attn2, attn_weights_block2 = self.mha2(out1,
+                                               encoder_output,
+                                               encoder_output,
+                                               padding_mask)
         attn2 = self.dropout2(attn2, training=training)
         out2 = self.layernorm2(attn2 + out1)
 
