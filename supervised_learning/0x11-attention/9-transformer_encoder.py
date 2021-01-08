@@ -25,7 +25,7 @@ class Encoder(tf.keras.layers.Layer):
         x = self.embedding(x)
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
         x += self.positional_encoding[:self.dm, :seq_len, None].T
-        
+
         x = self.dropout(x, training=training)
 
         for i in range(self.N):
