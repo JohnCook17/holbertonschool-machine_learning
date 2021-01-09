@@ -32,7 +32,7 @@ class Decoder(tf.keras.layers.Layer):
 
         x = self.embedding(x)
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
-        x += tf.convert_to_tensor(self.positional_encoding[:seq_len],
+        x += tf.convert_to_tensor(self.positional_encoding[:seq_len, :],
                                   dtype=tf.float32)
 
         x = self.dropout(x, training=training)
