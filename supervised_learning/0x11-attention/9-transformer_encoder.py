@@ -28,14 +28,12 @@ class Encoder(tf.keras.layers.Layer):
 
     def call(self, x, training, mask):
         """Calls the encoder"""
-        seq_len = tf.shape(x)[1]
+        seq_len = x.shape.as_list()[1]
 
         x = self.embedding(x)
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
-        x += tf.transpose(tf.convert_to_tensor(self.positional_encoding,
-                                               dtype=tf.float32)[:self.dm,
-                                                                 :seq_len,
-                                                                 None])
+        x += tf.convert_to_tensor(self.positional_encoding,
+                                  dtype=tf.float32)[:seq_len]
 
         x = self.dropout(x, training=training)
 
