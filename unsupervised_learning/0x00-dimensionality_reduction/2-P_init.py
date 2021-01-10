@@ -18,32 +18,23 @@ def P_init(X, perplexity):
 
 
     def softmax(X):
-        """"""
         e_x = np.exp(X - np.max(X, axis=1).reshape([-1, 1]))
-        np.fill_diagonal(e_x, 0)
+
+        np.fill_diagonal(e_x, 0.)
+
+        e_x = e_x + 1e-8
 
         return e_x / e_x.sum(axis=1).reshape([-1, 1])
 
+    def calc_prob_mat(dist):
+        two_sig_sq = 2. * np.square(perplexity)
 
-    def prob_mat(dist):
+        return softmax(dist / two_sig_sq)
+
+
+    def entropy(prob_mat):
         """"""
-
-        return softmax(dist)
-
-
-    def calc_perplexity(X):
-        """"""
-        entropy = -np.sum(X * np.log2(X))
-
-        perplexity = 2 ** entropy
-
-        return entropy
-
-
-    def shannon_entropy(D, perplexity):
-        """"""
-        return calc_perplexity(perplexity)
-
+        return np.log2(perplexity)
 
     D = dist(X)
 
@@ -51,6 +42,8 @@ def P_init(X, perplexity):
 
     betas = np.ones((n, 1))
 
-    H = shannon_entropy(X, perplexity)
+    prob_mat = calc_prob_mat(D)
+
+    H = entropy(prob_mat)
 
     return D, P, betas, H
