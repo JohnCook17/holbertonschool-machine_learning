@@ -5,24 +5,20 @@ import tensorflow.compat.v2 as tf
 
 def create_masks(inputs, target):
     """Creates 3 mask"""
+    enc_mask = tf.cast(tf.math.equal(inputs, 0), tf.float32)
+    enc_mask = enc_mask[:, tf.newaxis, tf.newaxis, :]
 
-    def create_padding_mask(seq):
-        """creates a padding mask"""
-        seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
+    dec_mask = tf.cast(tf.math.equal(inputs, 0), tf.float32)
+    dec_mask = dec_mask[:, tf.newaxis, tf.newaxis, :]
 
-        return seq[: tf.newaxis, tf.newaxis, :]
+    la_size = tf.shape(target)[1]
+    la_mask = 1 - tf.linalg.band_part(tf.ones((la_size,
+                                               la_size)), -1, 0)
 
-    def create_look_ahead_mask(size):
-        """creates la mask"""
-        mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
-        return mask
+    cmb_mask = tf.cast(tf.math.equal(target, 0), tf.float32)
+    cmb_mask = cmb_mask[:, tf.newaxis, tf.newaxis, :]
 
-    enc_mask = create_padding_mask(inputs)
+    cmb_mask = tf.maximum(cmb_mask, la_maks)
 
-    dec_mask = create_padding_mask(inputs)
 
-    la_mask = create_la_mask(tf.shape(target)[1])
-    dec_tar_mask = create_padding_mask(tar)
-    combined_mask = tf.maximum(dec_tar_mask, la_mask)
-
-    return enc_mask, combined_mask, dec_mask
+    return enc_mask, cmb_mask, dec_mask
