@@ -15,6 +15,13 @@ class Dataset():
 
         dsv = tfds.load("ted_hrlr_translate/pt_to_en", split="validation",
                         as_supervised=True)
+
+        _, metadata = tfds.load("ted_hrlr_translate/pt_to_en",
+                                with_info=True,
+                                as_supervised=True)
+
+        BUFFER_SIZE = metadata.splits["train"].num_examples
+
         self.data_valid = dsv
 
         self.tokenizer_pt, self.tokenizer_en = (self
@@ -31,7 +38,7 @@ class Dataset():
 
         self.data_train = self.data_train.filter(filter_max_len)
         self.data_train = self.data_train.cache()
-        self.data_train = (self.data_train.shuffle(batch_size)
+        self.data_train = (self.data_train.shuffle(BUFFER_SIZE)
                            .padded_batch(batch_size,
                                          padded_shapes=([None], [None])))
         self.data_train = self.data_train.prefetch(tf.data.experimental
