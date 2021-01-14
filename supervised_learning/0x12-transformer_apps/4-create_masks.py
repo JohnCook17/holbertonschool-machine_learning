@@ -8,8 +8,9 @@ def create_masks(inputs, target):
     enc_mask = tf.cast(tf.math.equal(inputs, 0), tf.float32)
     enc_mask = enc_mask[:, tf.newaxis, tf.newaxis, :]
 
+    batch_size = target.shape.as_list()[0]
     la_size = target.shape.as_list()[1]
-    la_mask = 1 - tf.linalg.band_part(tf.ones((la_size, la_size)), -1, 0)
+    la_mask = 1 - tf.linalg.band_part(tf.ones((batch_size, la_size, la_size)), -1, 0)
     la_mask = la_mask[:, tf.newaxis, :, :]
 
     dec_mask = tf.cast(tf.math.equal(inputs, 0), tf.float32)
