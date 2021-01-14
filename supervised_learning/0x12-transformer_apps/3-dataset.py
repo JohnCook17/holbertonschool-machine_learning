@@ -3,8 +3,6 @@
 import tensorflow.compat.v2 as tf
 import tensorflow_datasets as tfds
 
-tf.compat.v1.enable_eager_execution()
-
 
 class Dataset():
     """The Dataset class loads and processes data"""

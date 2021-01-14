@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-""""""
+"""Dataset to be used with Transformer"""
 import tensorflow.compat.v2 as tf
 import tensorflow_datasets as tfds
-
-tf.compat.v1.enable_eager_execution()
 
 
 class Dataset():
