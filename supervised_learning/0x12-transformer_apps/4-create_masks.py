@@ -20,5 +20,4 @@ def create_masks(inputs, target):
 
     cmb_mask = tf.maximum(cmb_mask, la_maks)
 
-
     return enc_mask, cmb_mask, dec_mask
