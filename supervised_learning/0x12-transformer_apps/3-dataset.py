@@ -33,14 +33,14 @@ class Dataset():
         self.data_train = self.data_train.cache()
         self.data_train = (self.data_train.shuffle(batch_size)
                            .padded_batch(batch_size,
-                                         padded_shapes=(batch_size, None)))
+                                         padded_shapes=([None], [None])))
         self.data_train = self.data_train.prefetch(tf.data.experimental
                                                    .AUTOTUNE)
 
         self.data_valid = self.data_valid.filter(filter_max_len)
         self.data_valid = (self.data_valid
                            .padded_batch(batch_size,
-                                         padded_shapes=(batch_size, None)))
+                                         padded_shapes=([None], [None])))
 
     def tokenize_dataset(self, data):
         """Tokenize the data set"""
