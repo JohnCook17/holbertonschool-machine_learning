@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Mask so that null values of padding are not accounted"""
 import tensorflow.compat.v2 as tf
-import tensorflow_datasets as tfds
 
 
 def create_masks(inputs, target):
