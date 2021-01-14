@@ -21,10 +21,6 @@ class Dataset():
                                                 .tokenize_dataset(self
                                                                   .data_train))
 
-        self.data_train = dst.map(self.tf_encode)
-
-        self.data_valid = dsv.map(self.tf_encode)
-
     def tokenize_dataset(self, data):
         """Tokenize the data set"""
         pt = (tfds.features.text.SubwordTextEncoder
