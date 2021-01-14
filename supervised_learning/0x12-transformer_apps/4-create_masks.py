@@ -15,9 +15,9 @@ def create_masks(inputs, target):
     la_mask = 1 - tf.linalg.band_part(tf.ones((la_size,
                                                la_size)), -1, 0)
 
-    cmb_mask = tf.cast(tf.math.equal(target, 0), tf.float32)
-    cmb_mask = cmb_mask[:, tf.newaxis, tf.newaxis, :]
+    tar_mask = tf.cast(tf.math.equal(target, 0), tf.float32)
+    tar_mask = tar_mask[:, tf.newaxis, tf.newaxis, :]
 
-    cmb_mask = tf.maximum(cmb_mask, la_maks)
+    cmb_mask = tf.maximum(tar_mask, la_mask)
 
     return enc_mask, cmb_mask, dec_mask
