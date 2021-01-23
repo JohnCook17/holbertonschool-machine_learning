@@ -13,18 +13,20 @@ def semantic_search(corpus_path, sentence):
 
     files = tf.io.gfile.walk(corpus_path)
 
+    VERBOSE = True
+
     try:
         tf.io.gfile.remove(corpus_path + "/" + ".DS_Store")
     except Exception as e:
         print("\nNo DS_Store found\n")
 
-    answer_outputs = []
-    answer_tokens = []
+    outputs = []
+    max_max = -999
+    best_candidate = None
 
     for my_file in files:
         files_len = len(my_file[2])
         for i, md in enumerate(my_file[2]):
-            print("\nWorking on file {} out of {}!!!\n".format(i, files_len))
             with open(corpus_path + "/" + str(md)) as f:
                 reference = f.read()
 
@@ -47,21 +49,47 @@ def semantic_search(corpus_path, sentence):
                                                        (input_word_ids,
                                                         input_masks,
                                                         input_type_ids))
-                outputs = model([input_word_id, input_mask, input_type_id])
+                output = model([input_word_id, input_mask, input_type_id])
+                current_max_start = tf.argmax(output[0][0][1:])
+                current_max_end = tf.argmax(output[1][0][1:])
+                total = current_max_end - current_max_start
+                current_output = output[0][0][current_max_start:
+                                              current_max_end + 1]
+
+                current_max = (tf.keras.backend.sum(current_output)
+                               / tf.cast(total, tf.float32))
+
                 # using `[1:]` will enforce an answer. `outputs[0][0][0]`
                 # is the ignored '[CLS]' token logit
-                short_start = tf.argmax(outputs[0][0][1:]) + 1
+                # short_start = tf.argmax(outputs[0][0][1:]) + 1
                 # short_end = tf.argmax(outputs[1][0][1:]) + 1
-                answer_tokens.append(tokens[short_start:])  # short_end + 1]
+                # answer_tokens.append(tokens[short_start:short_end + 1])
+                print(tf.shape(current_output)[0])
+                if current_max == 0 or tf.shape(current_output)[0] <= 2:
+                    current_max = -999
+                outputs.append(current_max)
+                if VERBOSE:
+                    print("\nWorking on file {} out of {}!!!\n"
+                          .format(i + 1, files_len))
+                    print("file: {}".format(str(md)))
 
-                answer_outputs.append(outputs)
+                    print(current_output)
 
-    largest = 0
+                    print(current_max)
 
-    for i, answer in enumerate(answer_tokens):
-        my_sum = (tf.cast(tf.keras.backend.sum(answer_outputs[i][0]), tf.int32)
-                  / tf.shape(answer_outputs[i])[1])
-        if my_sum > largest:
-            largest = my_sum
+                    if current_max > max_max:
+                        max_max = current_max
+                        best_candidate = my_file[2][tf.argmax(outputs)]
+                    print(max_max)
+                    print("Best candidate: {}".format(best_candidate))
 
-    return tokenizer.convert_tokens_to_string(answer_tokens[largest])
+    index_min = tf.argmin(outputs)
+    print(my_file[2][index_min])
+
+    index_max = tf.argmax(outputs)
+    print(my_file[2][index_max])
+    print("\n")
+
+    # return tokenizer.convert_tokens_to_string(answer_tokens[index])
+    with open(corpus_path + "/" + my_file[2][index_max]) as f:
+        return f.read()
