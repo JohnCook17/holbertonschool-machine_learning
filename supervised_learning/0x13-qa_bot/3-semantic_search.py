@@ -63,7 +63,7 @@ def semantic_search(corpus_path, sentence):
                 # is the ignored '[CLS]' token logit
                 # short_start = tf.argmax(outputs[0][0][1:]) + 1
                 # short_end = tf.argmax(outputs[1][0][1:]) + 1
-                print(tf.shape(current_output)[0])
+
                 if current_max == 0 or tf.shape(current_output)[0] <= 2:
                     current_max = -999
                 outputs.append(current_max)
@@ -73,7 +73,7 @@ def semantic_search(corpus_path, sentence):
                     print("file: {}".format(str(md)))
 
                     print(current_output)
-
+                    print(tf.shape(current_output)[0])
                     print(current_max)
 
                     if current_max > max_max:
