@@ -30,7 +30,7 @@ def question_answer(question, reference):
     outputs = model([input_word_ids, input_mask, input_type_ids])
     # using `[1:]` will enforce an answer. `outputs[0][0][0]`
     # is the ignored '[CLS]' token logit
-    short_start = tf.argmax(outputs[0][0][1:]) + 5
+    short_start = tf.argmax(outputs[0][0][1:]) + 1
     short_end = tf.argmax(outputs[1][0][1:]) + 1
     answer_tokens = tokens[short_start: short_end + 1]
     answer = tokenizer.convert_tokens_to_string(answer_tokens)
