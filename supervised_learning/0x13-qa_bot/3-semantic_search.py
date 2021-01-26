@@ -21,7 +21,7 @@ def semantic_search(corpus_path, sentence):
         print("\nNo DS_Store found\n")
 
     outputs = []
-    max_max = -999
+    max_max = 0
     best_candidate = None
 
     for my_file in files:
@@ -30,15 +30,18 @@ def semantic_search(corpus_path, sentence):
             with open(corpus_path + "/" + str(md)) as f:
                 reference = f.read()
 
+                my_table = str.maketrans("", "", ".!?")
+                reference = reference.translate(my_table)
+
                 sentence_tokens = tokenizer.tokenize(sentence)
                 paragraph_tokens = tokenizer.tokenize(reference)
-                tokens = (["[CLS]"] + sentence_tokens + ["[SEP]"]
-                          + paragraph_tokens + ["[SEP]"])
+                tokens = (sentence_tokens + ["[SEP]"]
+                          + paragraph_tokens)
 
                 input_word_ids = tokenizer.convert_tokens_to_ids(tokens)
                 input_masks = [1] * len(input_word_ids)
-                input_type_ids = ([0] * (1 + len(sentence_tokens) + 1) + [1]
-                                  * (len(paragraph_tokens) + 1))
+                input_type_ids = ([0] * (len(sentence_tokens) + 1) + [1]
+                                  * (len(paragraph_tokens)))
 
                 (input_word_id,
                     input_mask,
@@ -50,30 +53,39 @@ def semantic_search(corpus_path, sentence):
                                                         input_masks,
                                                         input_type_ids))
                 output = model([input_word_id, input_mask, input_type_id])
-                current_max_start = tf.argmax(output[0][0][1:])
-                current_max_end = tf.argmax(output[1][0][1:])
-                total = current_max_end - current_max_start
-                current_output = output[0][0][current_max_start:
-                                              current_max_end + 1]
+                current_output = output[0][0][:]
 
-                current_max = (tf.keras.backend.sum(current_output)
-                               / tf.cast(total, tf.float32))
+                current_output = tf.clip_by_value(current_output,
+                                                  clip_value_min=0,
+                                                  clip_value_max=500)
 
-                # using `[1:]` will enforce an answer. `outputs[0][0][0]`
-                # is the ignored '[CLS]' token logit
-                # short_start = tf.argmax(outputs[0][0][1:]) + 1
-                # short_end = tf.argmax(outputs[1][0][1:]) + 1
+                zero = tf.constant(0, dtype=tf.float32)
+                one = tf.constant(1, dtype=tf.float32)
+                where = tf.not_equal(current_output, zero)
+                # below clip value min is a hyper parameter to tune.
+                current_output = tf.clip_by_value(current_output[where],
+                                                  clip_value_min=6.755,
+                                                  clip_value_max=500)
 
-                if current_max == 0 or tf.shape(current_output)[0] <= 2:
-                    current_max = -999
+                where = tf.not_equal(current_output, one)
+
+                current_output = current_output[where]
+
+                total = tf.math.count_nonzero(current_output)
+
+                current_max = tf.math.reduce_max(current_output)
+
+                if total > 1:
+                    current_max = (tf.keras.backend.sum(current_output)
+                                   / tf.cast(total, tf.float32))
+
                 outputs.append(current_max)
                 if VERBOSE:
                     print("\nWorking on file {} out of {}!!!\n"
                           .format(i + 1, files_len))
                     print("file: {}".format(str(md)))
-
                     print(current_output)
-                    print(tf.shape(current_output)[0])
+                    print(tf.shape(current_output))
                     print(current_max)
 
                     if current_max > max_max:

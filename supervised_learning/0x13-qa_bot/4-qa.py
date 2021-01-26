@@ -62,9 +62,9 @@ def semantic_search(corpus_path, sentence):
                 zero = tf.constant(0, dtype=tf.float32)
                 one = tf.constant(1, dtype=tf.float32)
                 where = tf.not_equal(current_output, zero)
-
+                # below clip value min is a hyper parameter to tune.
                 current_output = tf.clip_by_value(current_output[where],
-                                                  clip_value_min=6.755,  # hyper parameter to tune...
+                                                  clip_value_min=6.755,
                                                   clip_value_max=500)
 
                 where = tf.not_equal(current_output, one)
@@ -73,11 +73,11 @@ def semantic_search(corpus_path, sentence):
 
                 total = tf.math.count_nonzero(current_output)
 
-                current_max = tf.math.reduce_max(current_output)  # (tf.keras.backend.sum(current_output)
-                               # / tf.cast(total, tf.float32))
+                current_max = tf.math.reduce_max(current_output)
 
                 if total > 1:
-                    current_max = tf.keras.backend.sum(current_output) / tf.cast(total, tf.float32)
+                    current_max = (tf.keras.backend.sum(current_output)
+                                   / tf.cast(total, tf.float32))
 
                 outputs.append(current_max)
                 if VERBOSE:
