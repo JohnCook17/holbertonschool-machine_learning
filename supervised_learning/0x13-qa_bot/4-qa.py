@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-""""""
+"""Asnwers multiple questions from multiple documents"""
 import tensorflow as tf
 import tensorflow_hub as hub
 from transformers import BertTokenizer, TFBertModel
 
 
 def semantic_search(corpus_path, sentence):
-    """"""
+    """Searches multiple articles for an answer
+       corpus_path is the path to the docs
+       sentence is the question or sentence trying to find best match for
+       set verbose to false to turn off printing of progress.
+    """
     tokenizer = (BertTokenizer
                  .from_pretrained('bert-large-uncased-whole-word-masking'))
     model = hub.load("https://tfhub.dev/see--/bert-uncased-tf2-qa/1")
@@ -101,7 +105,10 @@ def semantic_search(corpus_path, sentence):
 
 
 def text_search(question, reference):
-    """"""
+    """Answers a question
+       question is the question to answer
+       reference is the doc to read from
+    """
     tokenizer = (BertTokenizer
                  .from_pretrained('bert-large-uncased-whole-word-masking'))
     model = hub.load("https://tfhub.dev/see--/bert-uncased-tf2-qa/1")
@@ -134,13 +141,16 @@ def text_search(question, reference):
 
 
 def answer_question(question, reference):
-    """"""
+    """A wrapper function for semantic search and txt to search
+       returns the answer to the question"""
     txt_to_search = semantic_search(reference, question)
     return text_search(question, txt_to_search)
 
 
 def qa_bot(reference):
-    """"""
+    """input output loop
+       reference is the path to the articles to search for an answer
+    """
     while True:
         print("Q: ", end="")
         question = input().lower()

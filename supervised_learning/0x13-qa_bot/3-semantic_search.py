@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-""""""
+"""Searches multiple articles for an answer"""
 import tensorflow as tf
 import tensorflow_hub as hub
 from transformers import BertTokenizer, TFBertModel
 
 
 def semantic_search(corpus_path, sentence):
-    """"""
+    """Searches multiple articles for an answer
+       corpus_path is the path to the docs
+       sentence is the question or sentence trying to find best match for
+       set verbose to false to turn off printing of progress.
+    """
     tokenizer = (BertTokenizer
                  .from_pretrained('bert-large-uncased-whole-word-masking'))
     model = hub.load("https://tfhub.dev/see--/bert-uncased-tf2-qa/1")

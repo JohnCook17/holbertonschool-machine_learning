@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-""""""
+"""Answers mulptiple questions"""
 import tensorflow as tf
 import tensorflow_hub as hub
 from transformers import BertTokenizer, TFBertModel
 
 
 def question_answer(question, reference):
-    """"""
+    """Answers a question
+       question is the question to answer
+       reference is the doc to read from
+    """
     tokenizer = (BertTokenizer
                  .from_pretrained('bert-large-uncased-whole-word-masking'))
     model = hub.load("https://tfhub.dev/see--/bert-uncased-tf2-qa/1")
@@ -39,7 +42,9 @@ def question_answer(question, reference):
 
 
 def answer_loop(reference):
-    """"""
+    """A simple answer loop, with question answering
+       reference is the reference to answer the question from
+    """
     while True:
         print("Q: ", end="")
         question = input().lower()
