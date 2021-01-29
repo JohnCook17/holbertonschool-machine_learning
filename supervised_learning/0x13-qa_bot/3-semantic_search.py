@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Searches multiple articles for an answer"""
-import tensorflow as tf
 import tensorflow_hub as hub
 import os
 import numpy as np
