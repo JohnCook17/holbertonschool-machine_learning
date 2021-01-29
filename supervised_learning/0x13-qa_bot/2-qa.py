@@ -47,12 +47,11 @@ def answer_loop(reference):
     """
     while True:
         print("Q: ", end="")
-        question = input().lower()
+        question = input()
 
-        if ((question == "exit"
-             or question == "quit"
-             or question == "goodbye"
-             or question == "bye")):
+        if (("exit" in question.lower().strip()
+             or "quit" in question.lower().strip()
+             or "bye" in question.lower().strip())):
             print("A: Goodbye")
             exit()
 
