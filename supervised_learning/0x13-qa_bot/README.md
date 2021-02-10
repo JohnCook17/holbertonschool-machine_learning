@@ -38,6 +38,6 @@ The objective of this project was to build a fully functional QA bot. I was requ
 		This task is a culmination of all previous task. First I enter the question and the
 		loop begins. It then performs Semantic Search on multiple files. I wish this process
 		could be faster but it takes some time to search through all 91 files. Once a file is
-		determined to be likely to contain the answer it is fed to text search, which
+		determined likely to contain the answer it is fed to text search, which
 		searches the file for the answer. The answer is then displayed on screen and the loop
 		continues untill it is closed.

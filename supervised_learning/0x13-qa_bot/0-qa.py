@@ -2,7 +2,7 @@
 """Answers a question"""
 import tensorflow as tf
 import tensorflow_hub as hub
-from transformers import BertTokenizer, TFBertModel
+from transformers import BertTokenizer
 
 
 def question_answer(question, reference):
