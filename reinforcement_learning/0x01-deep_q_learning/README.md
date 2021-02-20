@@ -11,6 +11,7 @@ from what I have read even google is now using an auto launch feature for this
 particular problem. I also need to further tune the hyper parameters especially
 gamma, and I would have liked to increase the frame capture up to one frame per
 frame.
+
 There are two main files, play.py and train.py, and I have chosen to include my
 policy.h5 for myself. play.py loads the policy, after recreating the env that it
 was trained on, and plays up to 10 games of breakout, however if a "breakout"
