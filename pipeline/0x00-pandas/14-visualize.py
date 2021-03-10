@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""Visualizes the data from start_date to end_date"""
 from datetime import date
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -9,7 +9,7 @@ df = from_file('coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv', ',')
 
 
 def fill(df):
-    """"""
+    """fills data with pervious close or 0"""
     df["Timestamp"] = pd.to_datetime(df["Timestamp"], unit="s")
     df["Timestamp"] = df["Timestamp"].dt.to_period("d")
     df["Timestamp"] = df["Timestamp"].dt.strftime("%Y-%m-%d")
@@ -48,7 +48,7 @@ def fill(df):
     prev_value = df["Close"][0]
 
     def fill_na(row, col):
-        """"""
+        """fills na with previous close"""
         nonlocal prev_value
         new_value = prev_value
         if pd.isna(row[col]):
@@ -59,20 +59,31 @@ def fill(df):
         return ret
 
     def fill_volume(row):
-        """"""
+        """fills na with 0"""
         if pd.isna(row):
             ret = 0
         else:
             ret = row
         return ret
 
-    df.iloc[1:]["Open"] = df.iloc[1:][["Open", "Close"]].apply(fill_na, axis=1, args=["Open"])
-    df.iloc[1:]["High"] = df.iloc[1:][["High", "Close"]].apply(fill_na, axis=1, args=["High"])
-    df.iloc[1:]["Low"] = df.iloc[1:][["Low", "Close"]].apply(fill_na, axis=1, args=["Low"])
-    df.iloc[1:]["Close1"] = df.iloc[1:][["Close1", "Close"]].apply(fill_na, axis=1, args=["Close1"])
+    df.iloc[1:]["Open"] = df.iloc[1:][["Open", "Close"]].apply(fill_na,
+                                                               axis=1,
+                                                               args=["Open"])
+    df.iloc[1:]["High"] = df.iloc[1:][["High", "Close"]].apply(fill_na,
+                                                               axis=1,
+                                                               args=["High"])
+    df.iloc[1:]["Low"] = df.iloc[1:][["Low", "Close"]].apply(fill_na,
+                                                             axis=1,
+                                                             args=["Low"])
+    df.iloc[1:]["Close1"] = df.iloc[1:][["Close1",
+                                         "Close"]].apply(fill_na,
+                                                         axis=1,
+                                                         args=["Close1"])
 
-    df.iloc[1:]["Volume_(BTC)"] = df.iloc[1:]["Volume_(BTC)"].apply(fill_volume)
-    df.iloc[1:]["Volume_(Currency)"] = df.iloc[1:]["Volume_(Currency)"].apply(fill_volume)
+    df.iloc[1:]["Volume_(BTC)"] = (df.iloc[1:]["Volume_(BTC)"]
+                                   .apply(fill_volume))
+    df.iloc[1:]["Volume_(Currency)"] = (df.iloc[1:]["Volume_(Currency)"]
+                                        .apply(fill_volume))
 
     df["Close"] = df["Close1"]
 

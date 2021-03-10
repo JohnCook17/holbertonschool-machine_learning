@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""Drops the Nan's in close"""
 import pandas as pd
 from_file = __import__('2-from_file').from_file
 

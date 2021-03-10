@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""Renames a colum form Timestamp to Datestamp"""
 import pandas as pd
 from_file = __import__('2-from_file').from_file
 
