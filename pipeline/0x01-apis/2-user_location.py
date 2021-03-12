@@ -2,10 +2,10 @@
 """uses github api to find the location if rate limit is not reached"""
 import requests
 import argparse
-import pandas as pd
+# import pandas as pd
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    """parser = argparse.ArgumentParser()
     parser.add_argument("a")
     args = parser.parse_args()
 
@@ -21,3 +21,4 @@ if __name__ == '__main__':
         print("Reset in {} min".format(int(minutes)))
     else:
         print("Not found")
+    """
