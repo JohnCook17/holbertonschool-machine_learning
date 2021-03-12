@@ -16,4 +16,5 @@ if __name__ == '__main__':
     launchpad_name = launchpad["name"]
     launchpad_loc = launchpad["locality"]
 
-    print(launch_name, date_local, rocket_name, launchpad_name, launchpad_loc)
+    print(launch_name, date_local, rocket_name, "-", launchpad_name, "({})"
+          .format(launchpad_loc))
