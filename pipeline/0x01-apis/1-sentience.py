@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""""""
+"""List all starwars planets with sentient life"""
 import requests
 
 
 def sentientPlanets():
-    """"""
+    """list planets with sentient life"""
     r = requests.get("https://swapi-api.hbtn.io/api/species").json()
 
     next_page = r["next"]
