@@ -12,6 +12,8 @@ if __name__ == '__main__':
     rocket_name = requests.get("https://api.spacexdata.com/v4/rockets/{}"
                                .format(rocket_id)).json()["name"]
     launchpad = requests.get("https://api.spacexdata.com/v4/launchpads/{}"
-                             .format(launchpad_id)).json()["name"]
+                             .format(launchpad_id)).json()
+    launchpad_name = launchpad["name"]
+    launchpad_loc = launchpad["locality"]
 
-    print(launch_name, date_local, rocket_name, launchpad)
+    print(launch_name, date_local, rocket_name, launchpad_name, launchpad_loc)
