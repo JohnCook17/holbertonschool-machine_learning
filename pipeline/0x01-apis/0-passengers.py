@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-""""""
+"""Uses the starwarsapi to find out which ships can hold the number of
+   passengers"""
 import requests
 
 
 def availableShips(passengerCount):
-    """"""
+    """How many passengers can go on a ship"""
     r = requests.get("https://swapi-api.hbtn.io/api/starships").json()
 
     next_page = r["next"]
