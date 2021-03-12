@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""
+"""uses github api to find the location if rate limit is not reached"""
 import requests
 import argparse
 import pandas as pd
